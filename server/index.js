@@ -8,9 +8,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: '*', // Temporarily allow all origins (not recommended for production)
+  origin: ['http://localhost:5173', 'https://thinksync-frontend.onrender.com'],
   methods: ['GET', 'POST', 'DELETE'],
+  // credentials: true // optional if you're sending cookies or auth headers
 };
+
 
 app.use(cors(corsOptions));
 
