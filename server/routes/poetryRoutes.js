@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
 // POST a new poetry post
 router.post('/', upload.single('image'), async (req, res) => {
   const { title, userId, pin } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
+   const image = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`: "";
 
   if (!title || !pin) {
     return res.status(400).json({ error: 'Missing required fields' });
