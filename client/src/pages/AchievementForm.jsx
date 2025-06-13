@@ -39,7 +39,7 @@ const AchievementForm = () => {
     data.append("image", formData.image); 
   
     try {
-      const res = await axios.post("http://localhost:5000/api/achievement", data);
+      const res = await axios.post("https://thinksync-backend.onrender.com/api/achievement", data);
       if (res.status === 201) {
         alert("Post created successfully");
         navigate("/achievements",{replace:true}); 
