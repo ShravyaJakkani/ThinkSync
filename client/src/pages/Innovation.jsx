@@ -13,15 +13,17 @@ const Innovation = () => {
   useEffect(() => {
     loadPosts();
   }, [location.pathname]);
-
+  
   const loadPosts = async () => {
-    try {
-      const data = await fetchInnovationPosts();
-      setPosts(data);
-    } catch (err) {
-      console.error("Failed to fetch posts", err);
-    }
-  };
+  try {
+    const data = await fetchInnovationPosts();
+    console.log("Fetched data:", data); 
+    setPosts(data);
+  } catch (err) {
+    console.error("Failed to fetch posts", err);
+  }
+};
+
 
   const handleDelete = async (id) => {
     const pin = prompt("Enter your secret PIN to delete this post:");
