@@ -21,28 +21,28 @@ const upload = multer({ storage: storage });
 
 
 // GET all innovation posts
-// router.get('/', async (req, res) => {
-//   try {
-//     const posts = await InnovationPost.find().sort({ createdAt: -1 });
-//     console.log("Sending posts:", posts);
-//     res.json(posts);
-//   } catch (err) {
-//     res.status(500).json({ error: 'Failed to fetch posts' });
-//   }
-// });
-
 router.get('/', async (req, res) => {
   try {
-    const posts = [
-      { title: "Test", content: "Sample", pin: "1234", image: "", likes: [], _id: "1" }
-    ];
+    const posts = await InnovationPost.find().sort({ createdAt: -1 });
     console.log("Sending posts:", posts);
     res.json(posts);
   } catch (err) {
-    console.error("Failed to fetch posts", err);
     res.status(500).json({ error: 'Failed to fetch posts' });
   }
 });
+
+// router.get('/', async (req, res) => {
+//   try {
+//     const posts = [
+//       { title: "Test", content: "Sample", pin: "1234", image: "", likes: [], _id: "1" }
+//     ];
+//     console.log("Sending posts:", posts);
+//     res.json(posts);
+//   } catch (err) {
+//     console.error("Failed to fetch posts", err);
+//     res.status(500).json({ error: 'Failed to fetch posts' });
+//   }
+// });
 
 
 // POST a new innovation post
