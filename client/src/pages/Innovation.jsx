@@ -10,29 +10,44 @@ const Innovation = () => {
   const location = useLocation();
 
 
-  useEffect(() => {
-    loadPosts();
-  }, [location.pathname]);
+//   useEffect(() => {
+//     loadPosts();
+//   }, [location.pathname]);
   
-//  const loadPosts = async () => {
+// //  const loadPosts = async () => {
+// //   try {
+// //     const data = await fetchInnovationPosts();
+// //     console.log("Fetched data:", data);
+// //     setPosts(Array.isArray(data) ? data : []); 
+// //   } catch (err) {
+// //     console.error("Failed to fetch posts", err);
+// //   }
+// // };
+  useEffect(() => {
+  fetchInnovationPosts()
+    .then((data) => {
+      console.log("✅ Inside .then, got data:", data);
+      if (Array.isArray(data)) {
+        setPosts(data);
+      } else {
+        console.error("❌ Data is NOT an array:", data);
+      }
+    })
+    .catch((err) => {
+      console.error("❌ fetchInnovationPosts failed:", err.message);
+    });
+}, [location.pathname]);
+
+
+// const loadPosts = async () => {
 //   try {
 //     const data = await fetchInnovationPosts();
-//     console.log("Fetched data:", data);
-//     setPosts(Array.isArray(data) ? data : []); 
+//     console.log("✅ Data fetched from backend:", data); // <== check this!
+//     setPosts(Array.isArray(data) ? data : []);
 //   } catch (err) {
-//     console.error("Failed to fetch posts", err);
+//     console.error("❌ Failed to fetch posts", err);
 //   }
 // };
-
-const loadPosts = async () => {
-  try {
-    const data = await fetchInnovationPosts();
-    console.log("✅ Data fetched from backend:", data); // <== check this!
-    setPosts(Array.isArray(data) ? data : []);
-  } catch (err) {
-    console.error("❌ Failed to fetch posts", err);
-  }
-};
 
 
   const handleDelete = async (id) => {
