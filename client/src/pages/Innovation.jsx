@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchInnovationPosts, deleteInnovationPost } from "../api/innovationApi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { marked } from 'marked';
 
 import axios from "axios";
 
 const Innovation = () => {
   const [posts, setPosts] = useState([]);
+  const location = useLocation();
+
 
   useEffect(() => {
     loadPosts();
