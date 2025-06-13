@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://thinksync-backend.onrender.com';
+const BASE_URL = 'https://thinksync-backend.onrender.com/api/poetry';
 
 export const fetchPoetryPosts = async () => {
   const res = await axios.get(BASE_URL);
