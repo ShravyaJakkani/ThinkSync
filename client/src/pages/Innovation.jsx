@@ -14,16 +14,25 @@ const Innovation = () => {
     loadPosts();
   }, [location.pathname]);
   
- const loadPosts = async () => {
+//  const loadPosts = async () => {
+//   try {
+//     const data = await fetchInnovationPosts();
+//     console.log("Fetched data:", data);
+//     setPosts(Array.isArray(data) ? data : []); 
+//   } catch (err) {
+//     console.error("Failed to fetch posts", err);
+//   }
+// };
+
+const loadPosts = async () => {
   try {
     const data = await fetchInnovationPosts();
-    console.log("Fetched data:", data);
-    setPosts(Array.isArray(data) ? data : []); 
+    console.log("✅ Data fetched from backend:", data); // <== check this!
+    setPosts(Array.isArray(data) ? data : []);
   } catch (err) {
-    console.error("Failed to fetch posts", err);
+    console.error("❌ Failed to fetch posts", err);
   }
 };
-
 
 
   const handleDelete = async (id) => {
