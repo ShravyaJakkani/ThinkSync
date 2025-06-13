@@ -8,7 +8,7 @@ export const fetchAnnouncementPosts = async () => {
 };
 
 export const createAnnouncementPost = async (postData) => {
-  const response = await axios.post(API_URL, postData); // no headers
+  const response = await axios.post(API_URL, postData); 
   return response.data;
 };
 
