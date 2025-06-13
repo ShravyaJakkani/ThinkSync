@@ -4,9 +4,10 @@ const API_URL = 'https://thinksync-backend.onrender.com/api/innovation';
 
 export const fetchInnovationPosts = async () => {
   const response = await axios.get(API_URL);
-  console.log("Backend response:", response.data); // 🔍
-  return response.data.posts;
+  console.log("Backend response:", response.data); 
+  return response.data; 
 };
+
 
 
 export const createInnovationPost = async (postData) => {
