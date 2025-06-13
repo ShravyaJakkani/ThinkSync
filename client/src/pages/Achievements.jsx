@@ -33,7 +33,7 @@ const handleLike = async (postId) => {
       const currentUser = localStorage.getItem("username") || "guest";
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/achievement/${postId}/like`,
+          `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
           { username: currentUser }
         );
         setPosts((prev) =>
