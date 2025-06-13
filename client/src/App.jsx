@@ -57,13 +57,13 @@ function Home() {
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem("username"));
 
-  useEffect(() => {
-    if (!loggedInUser) {
-      const name = prompt("Enter your name to continue:");
-      localStorage.setItem("username", name || "guest");
-      setLoggedInUser(name || "guest");
-    }
-  }, [loggedInUser]);
+  // useEffect(() => {
+  //   if (!loggedInUser) {
+  //     const name = prompt("Enter your name to continue:");
+  //     localStorage.setItem("username", name || "guest");
+  //     setLoggedInUser(name || "guest");
+  //   }
+  // }, [loggedInUser]);
 
   return (
     

@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
 // POST a new question paper image
 router.post("/", upload.single("image"), async (req, res) => {
   const {title, pin } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : "";
+  const image = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`: "";
 
   if (!pin || !image|| !title) {
     return res.status(400).json({ error: "all are required" });

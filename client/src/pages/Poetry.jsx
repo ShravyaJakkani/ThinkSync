@@ -35,7 +35,7 @@ const Poetry = () => {
       const currentUser = localStorage.getItem("username") || "guest";
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/poetry/${postId}/like`,
+          `https://thinksync-backend.onrender.com/api/poetry/${postId}/like`,
           { username: currentUser }
         );
         setPosts((prev) =>

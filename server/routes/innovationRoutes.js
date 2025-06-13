@@ -33,8 +33,7 @@ router.get('/', async (req, res) => {
 // POST a new innovation post
 router.post('/', upload.single("image"), async (req, res) => {
   const { title,userId, content, pin } = req.body;
-  const image = req.file ? `http://localhost:5000/uploads/${req.file.filename}` : "";
-
+  const image = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`: "";
 
   if (!title || !content || !pin) {
     return res.status(400).json({ error: 'Missing required fields' });

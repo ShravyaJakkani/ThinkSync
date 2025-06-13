@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/innovation';
+const API_URL = 'https://thinksync-backend.onrender.com/api/innovation';
 
 export const fetchInnovationPosts = async () => {
   const response = await axios.get(API_URL);
@@ -8,7 +8,7 @@ export const fetchInnovationPosts = async () => {
 };
 
 export const createInnovationPost = async (postData) => {
-  const response = await axios.post(API_URL, postData); // no headers
+  const response = await axios.post(API_URL, postData); 
   return response.data;
 };
 

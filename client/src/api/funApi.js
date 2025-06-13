@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/fun";
+const API_URL = "https://thinksync-backend.onrender.com/api/fun";
 
 export const fetchFunPosts = async () => {
   const res = await axios.get(API_URL);

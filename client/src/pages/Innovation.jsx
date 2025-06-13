@@ -35,7 +35,7 @@ const Innovation = () => {
     const currentUser = localStorage.getItem("username") || "guest";
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/innovation/${postId}/like`,
+        `https://thinksync-backend.onrender.com/api/innovation/${postId}/like`,
         { username: currentUser }
       );
       setPosts((prev) =>
@@ -80,22 +80,18 @@ const currentUser = localStorage.getItem("username");
                 />
               )}
               <br></br>
-             
-    
+             <button
+              onClick={() => handleLike(post._id)}
+               className="like-button">
+             ❤️ {post.likes?.includes(currentUser) ? "Unlike" : "Like"}
+            </button>
 
-    <button
-      onClick={() => handleLike(post._id)}
-      className="like-button">
-      ❤️ {post.likes?.includes(currentUser) ? "Unlike" : "Like"}
-    </button>
-
-    <p>{post.likes?.length || 0} like(s)</p>
+            <p>{post.likes?.length || 0} like(s)</p>
     
               <button
                 onClick={() => handleDelete(post._id)}
 
-                className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-              >
+                className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
                 Delete
               </button>
               <hr></hr>
