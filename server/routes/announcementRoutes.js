@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-// GET all innovation posts
+// GET all posts
 router.get('/', async (req, res) => {
   try {
     const posts = await AnnouncementPost.find().sort({ createdAt: -1 });
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST a new innovation post
+// POST a new  post
 router.post('/', upload.single("image"), async (req, res) => {
   const { title, content, pin } = req.body;
   const image = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`: "";
