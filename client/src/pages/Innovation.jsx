@@ -74,7 +74,9 @@ const currentUser = localStorage.getItem("username");
             <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
               <p className="text-sm text-gray-600 mb-1">Posted by: <strong>{post.userId}</strong></p> 
-                <p dangerouslySetInnerHTML={{ __html: marked(post.content) }}></p>
+                 {post.content && (
+          <p dangerouslySetInnerHTML={{ __html: marked(post.content) }}></p>
+        )}
               {post.image && (
                 <img
                   src={post.image}
