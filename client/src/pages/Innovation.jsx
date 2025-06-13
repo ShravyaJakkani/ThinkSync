@@ -78,12 +78,11 @@ const currentUser = localStorage.getItem("username");
         </Link>
       </div>
       <div className="space-y-6">
-        
-        {posts.length === 0 ? (
-          <p className="text-center text-gray-500">No posts yet.</p>
-        ) : (
-          posts.map((post, index) => (
-            <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
+        {Array.isArray(posts) && posts.length === 0 ? (
+  <p className="text-center text-gray-500">No posts yet.</p>
+) : (
+  posts.map((post, index) => (
+    <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
               <p className="text-sm text-gray-600 mb-1">Posted by: <strong>{post.userId}</strong></p> 
                  {post.content && (
@@ -117,6 +116,46 @@ const currentUser = localStorage.getItem("username");
       </div>
     </div>
   );
-};
+);
+
+//         {posts.length === 0 ? (
+//           <p className="text-center text-gray-500">No posts yet.</p>
+//         ) : (
+//           posts.map((post, index) => (
+//             <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
+//               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+//               <p className="text-sm text-gray-600 mb-1">Posted by: <strong>{post.userId}</strong></p> 
+//                  {post.content && (
+//           <p dangerouslySetInnerHTML={{ __html: marked(post.content) }}></p>
+//         )}
+//               {post.image && (
+//                 <img
+//                   src={post.image}
+//                   style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
+//                 />
+//               )}
+//               <br></br>
+//              <button
+//               onClick={() => handleLike(post._id)}
+//                className="like-button">
+//              ❤️ {post.likes?.includes(currentUser) ? "Unlike" : "Like"}
+//             </button>
+
+//             <p>{post.likes?.length || 0} like(s)</p>
+    
+//               <button
+//                 onClick={() => handleDelete(post._id)}
+
+//                 className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+//                 Delete
+//               </button>
+//               <hr></hr>
+//             </div>
+//           ))
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
 
 export default Innovation;
