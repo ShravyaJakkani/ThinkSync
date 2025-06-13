@@ -39,7 +39,7 @@ const InnovationPostForm = () => {
     data.append("image", formData.image); 
   
     try {
-      const res = await axios.post("http://localhost:5000/api/innovation", data);
+      const res = await axios.post("https://thinksync-backend.onrender.com/api/innovation", data);
       if (res.status === 201) {
         alert("Post created successfully");
         navigate("/innovation",{replace:true});
