@@ -24,7 +24,7 @@ const QuestionPaperForm = () => {
     Data.append("pin", formData.pin);
   
     try {
-      await axios.post("http://localhost:5000/api/questionpapers", Data);
+      await axios.post("https://thinksync-backend.onrender.com/api/questionpapers", Data);
       alert("Uploaded successfully!");
       navigate("/questionpapers",{replace:true});
     } catch (err) {
