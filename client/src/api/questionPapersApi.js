@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://thinksync-backend.onrender.com";
+const API_URL = "https://thinksync-backend.onrender.com/api/questionpapers";
 
 export const fetchQuestionPapers = async () => {
   const res = await axios.get(API_URL);
