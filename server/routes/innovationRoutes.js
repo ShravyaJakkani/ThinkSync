@@ -24,6 +24,7 @@ const upload = multer({ storage: storage });
 router.get('/', async (req, res) => {
   try {
     const posts = await InnovationPost.find().sort({ createdAt: -1 });
+    console.log("Sending posts:", posts);
     res.json(posts);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch posts' });
