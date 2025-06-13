@@ -93,10 +93,13 @@ const currentUser = localStorage.getItem("username");
         </Link>
       </div>
       <div className="space-y-6">
-        {Array.isArray(posts) && posts.length === 0 ? (
+       {!Array.isArray(posts) ? (
+  <p className="text-center text-gray-500">Loading or invalid data...</p>
+) : posts.length === 0 ? (
   <p className="text-center text-gray-500">No posts yet.</p>
 ) : (
   posts.map((post, index) => (
+
     <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
               <p className="text-sm text-gray-600 mb-1">Posted by: <strong>{post.userId}</strong></p> 
