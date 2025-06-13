@@ -36,29 +36,29 @@ app.get("/", (req, res) => {
 
 
 // Routes
-const innovationRoutes = require('./routes/innovationRoutes');
-app.use('/api/innovation', innovationRoutes);
+// const innovationRoutes = require('./routes/innovationRoutes');
+// app.use('/api/innovation', innovationRoutes);
 
-const poetryRoutes = require('./routes/poetryRoutes');
-app.use('/api/poetry', poetryRoutes);
+// const poetryRoutes = require('./routes/poetryRoutes');
+// app.use('/api/poetry', poetryRoutes);
 
-const questionPaperRoutes = require("./routes/questionPaperRoutes");
-app.use("/api/questionpapers", questionPaperRoutes);
+// const questionPaperRoutes = require("./routes/questionPaperRoutes");
+// app.use("/api/questionpapers", questionPaperRoutes);
 
-const funRoutes = require('./routes/funRoutes');
-app.use("/api/fun", funRoutes);
+// const funRoutes = require('./routes/funRoutes');
+// app.use("/api/fun", funRoutes);
 
-const artRoutes = require('./routes/artRoutes');
-app.use("/api/art", artRoutes);
+// const artRoutes = require('./routes/artRoutes');
+// app.use("/api/art", artRoutes);
 
-const announcementRoutes = require("./routes/announcementRoutes");
-app.use("/api/announcement", announcementRoutes);
+// const announcementRoutes = require("./routes/announcementRoutes");
+// app.use("/api/announcement", announcementRoutes);
 
-const achievementRoutes = require("./routes/achievementRoutes");
-app.use("/api/achievement", achievementRoutes);
+// const achievementRoutes = require("./routes/achievementRoutes");
+// app.use("/api/achievement", achievementRoutes);
 
-const opportunityRoutes = require("./routes/opportunityRoutes");
-app.use("/api/opportunity", opportunityRoutes);
+// const opportunityRoutes = require("./routes/opportunityRoutes");
+// app.use("/api/opportunity", opportunityRoutes);
 
 
 
