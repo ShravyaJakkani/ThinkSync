@@ -48,9 +48,9 @@ const InnovationPostForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 space-y-4">
+    <form onSubmit={handleSubmit} className="p-6 space-y-4" id="frm">
       <h1 className="text-xl font-bold">Create Innovation Post</h1>
-      <table className="w-full border-spacing-2">
+      <table className="w-full border-spacing-2" id="tbl">
         <tbody>
           <tr>
             <td className="p-2 font-semibold">Title:</td>
