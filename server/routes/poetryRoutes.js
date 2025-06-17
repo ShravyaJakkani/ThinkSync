@@ -96,7 +96,6 @@
 
 const express = require("express");
 const multer = require("multer");
-const { v4: uuidv4 } = require("uuid");
 const { PoetryPost } = require("../models/PoetryPost");
 const { cloudinary } = require("../config/cloudinary");
 
