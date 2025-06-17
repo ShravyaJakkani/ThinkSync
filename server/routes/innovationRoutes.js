@@ -34,7 +34,6 @@ router.get('/', async (req, res) => {
 });
 
 
-
 // POST a new innovation post
 router.post('/', upload.single("image"), async (req, res) => {
   const { title,userId, content, pin } = req.body;
