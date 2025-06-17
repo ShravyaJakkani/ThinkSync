@@ -8,6 +8,7 @@ import axios from "axios";
 const Innovation = () => {
   const [posts, setPosts] = useState([]);
   const location = useLocation();
+console.log("📣 Innovation component mounted");
 
 
 //   useEffect(() => {
