@@ -152,23 +152,38 @@ router.get("/", async (req, res) => {
 // });
 
 
-router.post('/', upload.single("image"), async (req, res) => {
+router.post("/", upload.single("image"), async (req, res) => {
   const { title, userId, pin } = req.body;
-  const image = req.file ? req.file.path : "";  
-
-  if (!title  || !pin) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+  let imageUrl = "";
 
   try {
-    const newPost = new PoetryPost({ title, userId, pin, image });
+    if (req.file) {
+      const streamUpload = (buffer) => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "thinksync/poetry" },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            }
+          );
+          stream.end(buffer);
+        });
+      };
+
+      const result = await streamUpload(req.file.buffer);
+      imageUrl = result.secure_url;
+    }
+
+    const newPost = new PoetryPost({ title, userId, pin, image: imageUrl });
     await newPost.save();
     res.status(201).json(newPost);
   } catch (err) {
-    console.error("Save error:", err);
-    res.status(400).json({ error: 'Failed to create post' });
+    console.error("Poetry post error:", err.message);
+    res.status(500).json({ error: "Failed to create poetry post" });
   }
 });
+
 
 router.post("/:id/like", async (req, res) => {
   const { username } = req.body;
