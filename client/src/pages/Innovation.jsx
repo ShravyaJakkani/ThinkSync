@@ -23,20 +23,30 @@ const Innovation = () => {
 // //     console.error("Failed to fetch posts", err);
 // //   }
 // // };
+//   useEffect(() => {
+//   fetchInnovationPosts()
+//     .then((data) => {
+//       console.log("✅ Inside .then, got data:", data);
+//       if (Array.isArray(data)) {
+//         setPosts(data);
+//       } else {
+//         console.error("❌ Data is NOT an array:", data);
+//       }
+//     })
+//     .catch((err) => {
+//       console.error("❌ fetchInnovationPosts failed:", err.message);
+//     });
+// }, [location.pathname]);
   useEffect(() => {
   fetchInnovationPosts()
     .then((data) => {
-      console.log("✅ Inside .then, got data:", data);
-      if (Array.isArray(data)) {
-        setPosts(data);
-      } else {
-        console.error("❌ Data is NOT an array:", data);
-      }
+      console.log("✅ API raw response:", data);
     })
     .catch((err) => {
       console.error("❌ fetchInnovationPosts failed:", err.message);
     });
-}, [location.pathname]);
+}, []);
+
 
 
 // const loadPosts = async () => {
