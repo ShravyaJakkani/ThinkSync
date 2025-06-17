@@ -1,36 +1,100 @@
 import React, { useEffect, useState } from "react";
 import { fetchInnovationPosts, deleteInnovationPost } from "../api/innovationApi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { marked } from 'marked';
 
 import axios from "axios";
 
 const Innovation = () => {
   const [posts, setPosts] = useState([]);
+  const location = useLocation();
 
-  useEffect(() => {
-    loadPosts();
-  }, [location.pathname]);
 
-  const loadPosts = async () => {
-    try {
-      const data = await fetchInnovationPosts();
-      setPosts(data);
-    } catch (err) {
-      console.error("Failed to fetch posts", err);
-    }
-  };
+//   useEffect(() => {
+//     loadPosts();
+//   }, [location.pathname]);
+  
+// //  const loadPosts = async () => {
+// //   try {
+// //     const data = await fetchInnovationPosts();
+// //     console.log("Fetched data:", data);
+// //     setPosts(Array.isArray(data) ? data : []); 
+// //   } catch (err) {
+// //     console.error("Failed to fetch posts", err);
+// //   }
+// // };
+//   useEffect(() => {
+//   fetchInnovationPosts()
+//     .then((data) => {
+//       console.log("✅ Inside .then, got data:", data);
+//       if (Array.isArray(data)) {
+//         setPosts(data);
+//       } else {
+//         console.error("❌ Data is NOT an array:", data);
+//       }
+//     })
+//     .catch((err) => {
+//       console.error("❌ fetchInnovationPosts failed:", err.message);
+//     });
+// }, [location.pathname]);
+   useEffect(() => {
+  fetchInnovationPosts()
+    .then((data) => {
+      console.log("✅ API response received:", data); // Add this
+      if (Array.isArray(data)) {
+        setPosts(data);
+      } else if (data && typeof data === 'object') {
+        const converted = Object.values(data); // Convert object to array
+        console.log("Converted object to array:", converted); // Optional
+        setPosts(converted);
+      } else {
+        console.error("❌ Invalid structure:", data);
+      }
+    })
+    .catch((err) => {
+      console.error("❌ fetchInnovationPosts error:", err.message);
+    });
+}, [location.pathname]);
 
+
+
+
+// const loadPosts = async () => {
+//   try {
+//     const data = await fetchInnovationPosts();
+//     console.log("✅ Data fetched from backend:", data); // <== check this!
+//     setPosts(Array.isArray(data) ? data : []);
+//   } catch (err) {
+//     console.error("❌ Failed to fetch posts", err);
+//   }
+// };
+
+
+  // const handleDelete = async (id) => {
+  //   const pin = prompt("Enter your secret PIN to delete this post:");
+  //   if (!pin) return;
+  //   try {
+  //     await deleteInnovationPost(id, pin);
+  //     loadPosts(); 
+  //   } catch (err) {
+  //     alert("Incorrect PIN or failed to delete.");
+  //   }
+  // };
   const handleDelete = async (id) => {
-    const pin = prompt("Enter your secret PIN to delete this post:");
-    if (!pin) return;
-    try {
-      await deleteInnovationPost(id, pin);
-      loadPosts(); 
-    } catch (err) {
-      alert("Incorrect PIN or failed to delete.");
-    }
-  };
+  const pin = prompt("Enter your secret PIN to delete this post:");
+  if (!pin) return;
+  try {
+    await deleteInnovationPost(id, pin);
+
+    // Refetch posts after delete
+    const updated = await fetchInnovationPosts();
+    setPosts(Array.isArray(updated) ? updated : []);
+    
+  } catch (err) {
+    alert("Incorrect PIN or failed to delete.");
+  }
+};
+
    const handleLike = async (postId) => {
     const currentUser = localStorage.getItem("username") || "guest";
     try {
@@ -64,15 +128,19 @@ const currentUser = localStorage.getItem("username");
         </Link>
       </div>
       <div className="space-y-6">
-        
-        {posts.length === 0 ? (
-          <p className="text-center text-gray-500">No posts yet.</p>
-        ) : (
-          posts.map((post, index) => (
-            <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
+       {!Array.isArray(posts) ? (
+  <p className="text-center text-gray-500">Loading or invalid data...</p>
+) : posts.length === 0 ? (
+  <p className="text-center text-gray-500">No posts yet.</p>
+) : (
+  posts.map((post, index) => (
+
+    <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
               <p className="text-sm text-gray-600 mb-1">Posted by: <strong>{post.userId}</strong></p> 
-                <p dangerouslySetInnerHTML={{ __html: marked(post.content) }}></p>
+                 {post.content && (
+          <p dangerouslySetInnerHTML={{ __html: marked(post.content) }}></p>
+        )}
               {post.image && (
                 <img
                   src={post.image}
@@ -101,6 +169,46 @@ const currentUser = localStorage.getItem("username");
       </div>
     </div>
   );
-};
+);
+
+//         {posts.length === 0 ? (
+//           <p className="text-center text-gray-500">No posts yet.</p>
+//         ) : (
+//           posts.map((post, index) => (
+//             <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
+//               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+//               <p className="text-sm text-gray-600 mb-1">Posted by: <strong>{post.userId}</strong></p> 
+//                  {post.content && (
+//           <p dangerouslySetInnerHTML={{ __html: marked(post.content) }}></p>
+//         )}
+//               {post.image && (
+//                 <img
+//                   src={post.image}
+//                   style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
+//                 />
+//               )}
+//               <br></br>
+//              <button
+//               onClick={() => handleLike(post._id)}
+//                className="like-button">
+//              ❤️ {post.likes?.includes(currentUser) ? "Unlike" : "Like"}
+//             </button>
+
+//             <p>{post.likes?.length || 0} like(s)</p>
+    
+//               <button
+//                 onClick={() => handleDelete(post._id)}
+
+//                 className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+//                 Delete
+//               </button>
+//               <hr></hr>
+//             </div>
+//           ))
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
 
 export default Innovation;
