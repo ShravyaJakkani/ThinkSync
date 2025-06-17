@@ -96,7 +96,7 @@
 
 const express = require("express");
 const multer = require("multer");
-const { PoetryPost } = require("../models/PoetryPost");
+const PoetryPost  = require("../models/PoetryPost");
 const { cloudinary } = require("../config/cloudinary");
 
 const router = express.Router();
