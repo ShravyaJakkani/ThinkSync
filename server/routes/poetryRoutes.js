@@ -117,46 +117,40 @@ router.post("/", upload.single("image"), async (req, res) => {
     let imageUrl = "";
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload_stream(
-        { folder: "thinksync/poetry" },
-        async (error, result) => {
-          if (error) {
-            console.error("Cloudinary error:", error);
-            return res.status(500).json({ error: "Image upload failed" });
-          }
+      // Wrap Cloudinary upload_stream in a Promise
+      const streamUpload = (buffer) => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "thinksync/poetry" },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            }
+          );
+          stream.end(buffer);
+        });
+      };
 
-          imageUrl = result.secure_url;
-
-          const post = new PoetryPost({
-            title: req.body.title,
-            userId: req.body.userId,
-            image: imageUrl,
-            pin: req.body.pin,
-          });
-
-          const savedPost = await post.save();
-          res.status(201).json(savedPost);
-        }
-      );
-
-      result.end(req.file.buffer);
-    } else {
-      // No image, save without image
-      const post = new PoetryPost({
-        title: req.body.title,
-        userId: req.body.userId,
-        image: "",
-        pin: req.body.pin,
-      });
-
-      const savedPost = await post.save();
-      res.status(201).json(savedPost);
+      const result = await streamUpload(req.file.buffer);
+      imageUrl = result.secure_url;
     }
+
+    const post = new PoetryPost({
+      title: req.body.title,
+      userId: req.body.userId,
+      image: imageUrl || "", // in case no image
+      pin: req.body.pin,
+    });
+
+    const savedPost = await post.save();
+    res.status(201).json(savedPost);
+
   } catch (err) {
     console.error("Poetry post error:", err.message);
     res.status(500).json({ error: "Failed to create poetry post" });
   }
 });
+
 
 router.delete("/:id", async (req, res) => {
   try {
