@@ -22,13 +22,13 @@ const upload = multer({ storage: storage });
 
 // GET all innovation posts
 router.get('/', async (req, res) => {
+  console.log("GET /api/innovation called");
   try {
-    console.log("🧪 MongoDB posts count:", posts.length);
-
     const posts = await InnovationPost.find().sort({ createdAt: -1 });
-    console.log("Sending posts:", posts);
+    console.log("Fetched posts:", posts); 
     res.json(posts);
   } catch (err) {
+    console.error("Error fetching posts:", err);
     res.status(500).json({ error: 'Failed to fetch posts' });
   }
 });
