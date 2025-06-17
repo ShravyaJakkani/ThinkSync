@@ -72,7 +72,7 @@ const Poetry = () => {
               <p className="text-sm text-gray-600 mb-1">Posted by: <strong>{post.userId}</strong></p> 
               {post.image && (
                 <img
-                  src={`http://localhost:5000${post.image}`}
+                  src={`https://thinksync-backend.onrender.com${post.image}`}
                   style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
                 />
               )}
