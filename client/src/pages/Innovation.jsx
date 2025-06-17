@@ -37,15 +37,25 @@ const Innovation = () => {
 //       console.error("❌ fetchInnovationPosts failed:", err.message);
 //     });
 // }, [location.pathname]);
-  useEffect(() => {
+   useEffect(() => {
   fetchInnovationPosts()
     .then((data) => {
-      console.log("✅ API raw response:", data);
+      console.log("✅ API response received:", data); // Add this
+      if (Array.isArray(data)) {
+        setPosts(data);
+      } else if (data && typeof data === 'object') {
+        const converted = Object.values(data); // Convert object to array
+        console.log("Converted object to array:", converted); // Optional
+        setPosts(converted);
+      } else {
+        console.error("❌ Invalid structure:", data);
+      }
     })
     .catch((err) => {
-      console.error("❌ fetchInnovationPosts failed:", err.message);
+      console.error("❌ fetchInnovationPosts error:", err.message);
     });
-}, []);
+}, [location.pathname]);
+
 
 
 
