@@ -38,6 +38,7 @@ const Innovation = () => {
 //     });
 // }, [location.pathname]);
    useEffect(() => {
+      console.log("📦 useEffect triggered - making API call...");
   fetchInnovationPosts()
     .then((data) => {
       console.log("✅ API response received:", data); // Add this
