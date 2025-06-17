@@ -50,16 +50,31 @@ const Innovation = () => {
 // };
 
 
+  // const handleDelete = async (id) => {
+  //   const pin = prompt("Enter your secret PIN to delete this post:");
+  //   if (!pin) return;
+  //   try {
+  //     await deleteInnovationPost(id, pin);
+  //     loadPosts(); 
+  //   } catch (err) {
+  //     alert("Incorrect PIN or failed to delete.");
+  //   }
+  // };
   const handleDelete = async (id) => {
-    const pin = prompt("Enter your secret PIN to delete this post:");
-    if (!pin) return;
-    try {
-      await deleteInnovationPost(id, pin);
-      loadPosts(); 
-    } catch (err) {
-      alert("Incorrect PIN or failed to delete.");
-    }
-  };
+  const pin = prompt("Enter your secret PIN to delete this post:");
+  if (!pin) return;
+  try {
+    await deleteInnovationPost(id, pin);
+
+    // Refetch posts after delete
+    const updated = await fetchInnovationPosts();
+    setPosts(Array.isArray(updated) ? updated : []);
+    
+  } catch (err) {
+    alert("Incorrect PIN or failed to delete.");
+  }
+};
+
    const handleLike = async (postId) => {
     const currentUser = localStorage.getItem("username") || "guest";
     try {
