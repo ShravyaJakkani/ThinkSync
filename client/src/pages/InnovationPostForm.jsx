@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const PoetryPostForm = () => {
+const InnovationPostForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
+    content: "",
     userId: "",
     image: null,
     pin: "",
@@ -13,45 +14,42 @@ const PoetryPostForm = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData((prev) => ({
-        ...prev,
-        image: files[0],
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "image" ? files[0] : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const data = new FormData();
     data.append("title", formData.title);
+    data.append("content", formData.content);
     data.append("userId", formData.userId);
     data.append("pin", formData.pin);
-    data.append("image", formData.image);
+    if (formData.image) {
+      data.append("image", formData.image);
+    }
 
     try {
       const res = await axios.post(
-        "https://thinksync-backend.onrender.com/api/poetry",
+        "https://thinksync-backend.onrender.com/api/innovation",
         data
       );
       if (res.status === 201) {
-        alert("Poetry post created!");
-        navigate("/poetry", { replace: true });
+        alert("Post created successfully!");
+        navigate("/innovation", { replace: true });
       }
     } catch (err) {
       console.error("Upload error:", err.response?.data || err.message);
-      alert("Failed to create poetry post");
+      alert("Failed to create post.");
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="p-6 space-y-4">
-      <h1 className="text-xl font-bold">Create Poetry Post</h1>
+      <h1 className="text-xl font-bold">Create Innovation Post</h1>
       <table className="w-full border-spacing-2">
         <tbody>
           <tr>
@@ -81,11 +79,25 @@ const PoetryPostForm = () => {
             </td>
           </tr>
           <tr>
+            <td className="p-2 font-semibold align-top">Content:</td>
+            <td className="p-2">
+              <textarea
+                name="content"
+                placeholder="Content"
+                onChange={handleChange}
+                required
+                className="border p-2 w-full"
+                rows={4}
+              ></textarea>
+            </td>
+          </tr>
+          <tr>
             <td className="p-2 font-semibold">Image:</td>
             <td className="p-2">
               <input
                 type="file"
                 name="image"
+                accept="image/*"
                 onChange={handleChange}
                 className="w-full"
               />
@@ -97,7 +109,7 @@ const PoetryPostForm = () => {
               <input
                 type="password"
                 name="pin"
-                placeholder="PIN for deletion"
+                placeholder="Secret PIN for deletion"
                 onChange={handleChange}
                 required
                 className="border p-2 w-full"
@@ -108,9 +120,9 @@ const PoetryPostForm = () => {
             <td colSpan={2} className="p-2 text-center">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-green-600 text-white px-4 py-2 rounded"
               >
-                Submit Poem
+                Submit Post
               </button>
             </td>
           </tr>
@@ -120,4 +132,4 @@ const PoetryPostForm = () => {
   );
 };
 
-export default PoetryPostForm;
+export default InnovationPostForm;
