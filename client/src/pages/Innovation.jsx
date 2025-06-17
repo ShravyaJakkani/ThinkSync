@@ -171,7 +171,8 @@ const currentUser = localStorage.getItem("username");
       </div>
     </div>
   );
-);
+
+}
 
 //         {posts.length === 0 ? (
 //           <p className="text-center text-gray-500">No posts yet.</p>
