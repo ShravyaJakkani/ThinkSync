@@ -67,7 +67,7 @@ function App() {
 
   return (
     
-    <Router>
+    // <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/innovation" element={<Innovation />} />
@@ -87,7 +87,7 @@ function App() {
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/opportunityform" element={<OpportunityForm />} />
       </Routes>
-    </Router>
+    // </Router>
     
   );
 }
