@@ -112,46 +112,86 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", upload.single("image"), async (req, res) => {
+// router.post("/", upload.single("image"), async (req, res) => {
+//   try {
+//     let imageUrl = "";
+
+//     if (req.file) {
+//       // Wrap Cloudinary upload_stream in a Promise
+//       const streamUpload = (buffer) => {
+//         return new Promise((resolve, reject) => {
+//           const stream = cloudinary.uploader.upload_stream(
+//             { folder: "thinksync/poetry" },
+//             (error, result) => {
+//               if (error) return reject(error);
+//               resolve(result);
+//             }
+//           );
+//           stream.end(buffer);
+//         });
+//       };
+
+  //     const result = await streamUpload(req.file.buffer);
+  //     imageUrl = result.secure_url;
+  //   }
+
+  //   const post = new PoetryPost({
+  //     title: req.body.title,
+  //     userId: req.body.userId,
+  //     image: imageUrl || "", // in case no image
+  //     pin: req.body.pin,
+  //   });
+
+  //   const savedPost = await post.save();
+  //   res.status(201).json(savedPost);
+
+  // } catch (err) {
+  //   console.error("Poetry post error:", err.message);
+  //   res.status(500).json({ error: "Failed to create poetry post" });
+  // }
+// });
+
+
+router.post('/', upload.single("image"), async (req, res) => {
+  const { title, userId, pin } = req.body;
+  const image = req.file ? req.file.path : "";  
+
+  if (!title  || !pin) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
   try {
-    let imageUrl = "";
-
-    if (req.file) {
-      // Wrap Cloudinary upload_stream in a Promise
-      const streamUpload = (buffer) => {
-        return new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream(
-            { folder: "thinksync/poetry" },
-            (error, result) => {
-              if (error) return reject(error);
-              resolve(result);
-            }
-          );
-          stream.end(buffer);
-        });
-      };
-
-      const result = await streamUpload(req.file.buffer);
-      imageUrl = result.secure_url;
-    }
-
-    const post = new PoetryPost({
-      title: req.body.title,
-      userId: req.body.userId,
-      image: imageUrl || "", // in case no image
-      pin: req.body.pin,
-    });
-
-    const savedPost = await post.save();
-    res.status(201).json(savedPost);
-
+    const newPost = new PoetryPost({ title, userId, pin, image });
+    await newPost.save();
+    res.status(201).json(newPost);
   } catch (err) {
-    console.error("Poetry post error:", err.message);
-    res.status(500).json({ error: "Failed to create poetry post" });
+    console.error("Save error:", err);
+    res.status(400).json({ error: 'Failed to create post' });
   }
 });
 
+router.post("/:id/like", async (req, res) => {
+  const { username } = req.body;
 
+  try {
+    const post = await PoetryPost.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    if (!username) return res.status(400).json({ error: "Username required" });
+
+    const alreadyLiked = post.likes.includes(username);
+    if (alreadyLiked) {
+      post.likes = post.likes.filter((user) => user !== username);
+    } else {
+      post.likes.push(username);
+    }
+
+    await post.save();
+    res.json({ message: alreadyLiked ? "Unliked" : "Liked", likes: post.likes });
+  } catch (err) {
+    res.status(500).json({ error: "Could not like/unlike post" });
+  }
+});
 router.delete("/:id", async (req, res) => {
   try {
     const post = await PoetryPost.findById(req.params.id);
