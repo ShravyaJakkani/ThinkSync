@@ -27,7 +27,7 @@ const Poetry = () => {
     await deletePoetryPost(id, pin);
 
     // Refetch posts after delete
-    const updated = await fetchInnovationPosts();
+    const updated = await fetchPoetryPosts();
     setPosts(Array.isArray(updated) ? updated : []);
     
   } catch (err) {
