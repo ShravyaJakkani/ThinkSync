@@ -94,68 +94,85 @@
 
 // module.exports = router;
 
-const express = require('express');
-const multer = require('multer');
-const PoetryPost = require('../models/PoetryPost');
-const { cloudinary, uploadToCloudinary } = require('../config/cloudinary');
+const express = require("express");
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
+const { PoetryPost } = require("../models/PoetryPost");
+const { cloudinary } = require("../config/cloudinary");
 
 const router = express.Router();
-
-// Setup multer for memory storage (Cloudinary)
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// GET all poetry posts
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const posts = await PoetryPost.find().sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
-    console.error("Poetry fetch error:", err);
-    res.status(500).json({ error: 'Failed to fetch poetry posts' });
+    res.status(500).json({ error: "Failed to fetch poetry posts" });
   }
 });
 
-// POST a new poetry post with image
-router.post('/', upload.single('image'), async (req, res) => {
-  const { title, content, userId, pin } = req.body;
-  let image = '';
-
+router.post("/", upload.single("image"), async (req, res) => {
   try {
-    if (req.file) {
-      const b64 = req.file.buffer.toString("base64");
-      const dataURI = `data:${req.file.mimetype};base64,${b64}`;
-      const uploadResult = await uploadToCloudinary(dataURI, "ThinkSync/Poetry");
-      image = uploadResult.secure_url;
-    }
+    let imageUrl = "";
 
-    const newPost = new PoetryPost({ title, content, userId, pin, image });
-    await newPost.save();
-    res.status(201).json(newPost);
+    if (req.file) {
+      const result = await cloudinary.uploader.upload_stream(
+        { folder: "thinksync/poetry" },
+        async (error, result) => {
+          if (error) {
+            console.error("Cloudinary error:", error);
+            return res.status(500).json({ error: "Image upload failed" });
+          }
+
+          imageUrl = result.secure_url;
+
+          const post = new PoetryPost({
+            title: req.body.title,
+            userId: req.body.userId,
+            image: imageUrl,
+            pin: req.body.pin,
+          });
+
+          const savedPost = await post.save();
+          res.status(201).json(savedPost);
+        }
+      );
+
+      result.end(req.file.buffer);
+    } else {
+      // No image, save without image
+      const post = new PoetryPost({
+        title: req.body.title,
+        userId: req.body.userId,
+        image: "",
+        pin: req.body.pin,
+      });
+
+      const savedPost = await post.save();
+      res.status(201).json(savedPost);
+    }
   } catch (err) {
-    console.error("Poetry post error:", err);
-    res.status(500).json({ error: 'Failed to create poetry post' });
+    console.error("Poetry post error:", err.message);
+    res.status(500).json({ error: "Failed to create poetry post" });
   }
 });
 
-// DELETE poetry post with PIN
-router.delete('/:id', async (req, res) => {
-  const { pin } = req.body;
-
+router.delete("/:id", async (req, res) => {
   try {
     const post = await PoetryPost.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: 'Post not found' });
+    if (!post) return res.status(404).json({ error: "Post not found" });
 
-    if (post.pin !== pin && pin !== process.env.ADMIN_PIN) {
-      return res.status(403).json({ error: 'Invalid PIN' });
+    if (post.pin !== req.body.pin) {
+      return res.status(403).json({ error: "Invalid PIN" });
     }
 
     await PoetryPost.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Poetry post deleted successfully' });
+    res.json({ message: "Post deleted" });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete poetry post' });
+    res.status(500).json({ error: "Failed to delete poetry post" });
   }
 });
 
 module.exports = router;
-
