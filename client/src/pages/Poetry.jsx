@@ -20,16 +20,20 @@ const Poetry = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    const pin = prompt("Enter your secret PIN to delete this post:");
-    if (!pin) return;
-    try {
-      await deletePoetryPost(id, pin);
-      loadPosts(); // refresh posts
-    } catch (err) {
-      alert("Incorrect PIN or failed to delete.");
-    }
-  };
+ const handleDelete = async (id) => {
+  const pin = prompt("Enter your secret PIN to delete this post:");
+  if (!pin) return;
+  try {
+    await deletePoetryPost(id, pin);
+
+    // Refetch posts after delete
+    const updated = await fetchInnovationPosts();
+    setPosts(Array.isArray(updated) ? updated : []);
+    
+  } catch (err) {
+    alert("Incorrect PIN or failed to delete.");
+  }
+};
 
   const handleLike = async (postId) => {
       const currentUser = localStorage.getItem("username") || "guest";
