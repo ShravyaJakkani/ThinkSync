@@ -40,7 +40,7 @@ const QuestionPapers = () => {
           <div key={paper._id} className="relative">
             <h3 className="text-xl font-semibold mb-2">Title:{paper.title}</h3>
             <a
-             href={`http://localhost:5000${paper.image}`}
+             href={paper.image}
              target="_blank"
              rel="noopener noreferrer"
              className="text-blue-600 underline">
