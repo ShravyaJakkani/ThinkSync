@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const { cloudinary } = require("../config/cloudinary");
-const { QuestionPaper } = require("../models/QuestionPaper");
+const  QuestionPaper  = require("../models/QuestionPaper");
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() }); // Store PDF in memory
