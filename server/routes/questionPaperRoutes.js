@@ -65,19 +65,23 @@ router.post("/", upload.single("image"), async (req, res) => {
 });
 
 // Delete a question paper by ID and PIN
-router.delete("/:id", async (req, res) => {
-  try {
-    const paper = await QuestionPaper.findById(req.params.id);
-    if (!paper) return res.status(404).json({ error: "Post not found" });
+router.delete('/:id', async (req, res) => {
+  const { pin } = req.body;
 
-    if (paper.pin !== req.body.pin) {
-      return res.status(403).json({ error: "Invalid PIN" });
+  if (!pin) return res.status(400).json({ error: 'PIN required for deletion' });
+
+  try {
+    const post = await QuestionPaper.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+
+    if (post.pin !== pin && pin !== process.env.ADMIN_PIN) {
+      return res.status(403).json({ error: 'Invalid PIN' });
     }
 
     await QuestionPaper.findByIdAndDelete(req.params.id);
-    res.json({ message: "Question paper deleted" });
+    res.json({ message: 'Post deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete question paper" });
+    res.status(500).json({ error: 'Failed to delete post' });
   }
 });
 
