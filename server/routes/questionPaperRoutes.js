@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const QuestionPaperPost = require("../models/QuestionPaperPost");
+const QuestionPaper = require("../models/QuestionPaper");
 const { cloudinary } = require("../config/cloudinary");
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const upload = multer({ storage });
 
 router.get("/", async (req, res) => {
   try {
-    const posts = await QuestionPaperPost.find().sort({ createdAt: -1 });
+    const posts = await QuestionPaper.find().sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch question papers" });
@@ -37,7 +37,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       imageUrl = result.secure_url;
     }
 
-    const newPost = new QuestionPaperPost({ title, pin, image: imageUrl });
+    const newPost = new QuestionPaper({ title, pin, image: imageUrl });
     await newPost.save();
     res.status(201).json(newPost);
   } catch (err) {
@@ -48,7 +48,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const post = await QuestionPaperPost.findById(req.params.id);
+    const post = await QuestionPaper.findById(req.params.id);
     if (!post) return res.status(404).json({ error: "Post not found" });
 
     const inputPin = req.body.pin;
@@ -58,7 +58,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(403).json({ error: "Invalid PIN" });
     }
 
-    await QuestionPaperPost.findByIdAndDelete(req.params.id);
+    await QuestionPaper.findByIdAndDelete(req.params.id);
     res.json({ message: "Question paper deleted" });
   } catch (err) {
     res.status(500).json({ error: "Failed to delete question paper" });
