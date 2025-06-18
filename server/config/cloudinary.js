@@ -11,7 +11,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'ThinkSync',
-    allowed_formats: ['jpg', 'jpeg', 'png']
+    allowed_formats: ['jpg', 'jpeg', 'png','pdf']
   }
 });
 
