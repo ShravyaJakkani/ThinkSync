@@ -60,8 +60,7 @@ const Fun = () => {
           <div key={post._id} className="relative border rounded p-2">
             
             <img
-              src={`http://localhost:5000${post.image}`}
-              alt="fun"
+              src={post.image}
               style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
             />
             <p dangerouslySetInnerHTML={{ __html: marked(post.title) }}></p>
