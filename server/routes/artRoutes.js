@@ -1,60 +1,63 @@
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
 const Art = require("../models/Art");
+const { cloudinary } = require("../config/cloudinary");
 
 const router = express.Router();
-
-// Multer setup
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
-});
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// GET all art posts
+// Get all art posts
 router.get("/", async (req, res) => {
   try {
-    const art = await Art.find().sort({ createdAt: -1 });
-    res.json(art);
+    const posts = await Art.find().sort({ createdAt: -1 });
+    res.json(posts);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch art posts" });
   }
 });
 
-// POST new art
+// Upload art post with optional image
 router.post("/", upload.single("image"), async (req, res) => {
-  const { title,userId, pin } = req.body;
-  const image = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`: "";
-  if (!title || !pin || !image) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
+  const { title, userId, pin } = req.body;
+  let imageUrl = "";
 
   try {
-    const post = new Art({ title,userId, image, pin });
-    await post.save();
-    res.status(201).json(post);
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "thinksync/art" },
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      imageUrl = result.secure_url;
+    }
+
+    const newPost = new Art({ title, userId, pin, image: imageUrl });
+    await newPost.save();
+    res.status(201).json(newPost);
   } catch (err) {
-    res.status(400).json({ error: "Upload failed" });
+    console.error("Upload error:", err);
+    res.status(500).json({ error: "Failed to create art post" });
   }
 });
 
+// Like/Unlike an art post
 router.post("/:id/like", async (req, res) => {
-  const { username } = req.body; 
+  const { username } = req.body;
 
   try {
     const post = await Art.findById(req.params.id);
     if (!post) return res.status(404).json({ error: "Post not found" });
 
-    if (!username) return res.status(400).json({ error: "Username required" });
-
     const alreadyLiked = post.likes.includes(username);
-
     if (alreadyLiked) {
-      
-      post.likes = post.likes.filter((user) => user !== username);
+      post.likes = post.likes.filter((u) => u !== username);
     } else {
-      
       post.likes.push(username);
     }
 
@@ -65,23 +68,23 @@ router.post("/:id/like", async (req, res) => {
   }
 });
 
-// DELETE art
+// Delete art post with user/admin PIN
 router.delete("/:id", async (req, res) => {
-  const { pin } = req.body;
-  if (!pin) return res.status(400).json({ error: "PIN required" });
-
   try {
     const post = await Art.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: "Not found" });
+    if (!post) return res.status(404).json({ error: "Post not found" });
 
-    if (post.pin !== pin && pin !== process.env.ADMIN_PIN) {
+    const inputPin = req.body.pin;
+    const adminPin = process.env.ADMIN_PIN;
+
+    if (post.pin !== inputPin && inputPin !== adminPin) {
       return res.status(403).json({ error: "Invalid PIN" });
     }
 
     await Art.findByIdAndDelete(req.params.id);
-    res.json({ message: "Deleted successfully" });
+    res.json({ message: "Post deleted" });
   } catch (err) {
-    res.status(500).json({ error: "Delete failed" });
+    res.status(500).json({ error: "Failed to delete art post" });
   }
 });
 
