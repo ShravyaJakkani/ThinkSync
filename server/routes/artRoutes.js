@@ -7,7 +7,6 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Get all art posts
 router.get("/", async (req, res) => {
   try {
     const posts = await Art.find().sort({ createdAt: -1 });
@@ -17,7 +16,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Upload art post with optional image
 router.post("/", upload.single("image"), async (req, res) => {
   const { title, userId, pin } = req.body;
   let imageUrl = "";
@@ -46,7 +44,6 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// Like/Unlike an art post
 router.post("/:id/like", async (req, res) => {
   const { username } = req.body;
 
@@ -68,7 +65,6 @@ router.post("/:id/like", async (req, res) => {
   }
 });
 
-// Delete art post with user/admin PIN
 router.delete("/:id", async (req, res) => {
   try {
     const post = await Art.findById(req.params.id);
