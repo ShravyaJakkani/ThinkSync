@@ -3,13 +3,10 @@ const router = express.Router();
 const multer = require('multer');
 const InnovationPost = require('../models/InnovationPost');
 
-// Cloudinary storage setup
 const { storage } = require('../config/cloudinary');
 const upload = multer({ storage }); // Multer using Cloudinary
 
-// GET all innovation posts
 router.get('/', async (req, res) => {
-  console.log("GET /api/innovation called");
   try {
     const posts = await InnovationPost.find().sort({ createdAt: -1 });
     console.log("Fetched posts:", posts); 
@@ -20,7 +17,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST a new innovation post (with image upload)
 router.post('/', upload.single("image"), async (req, res) => {
   const { title, userId, content, pin } = req.body;
   const image = req.file ? req.file.path : "";  
@@ -39,7 +35,6 @@ router.post('/', upload.single("image"), async (req, res) => {
   }
 });
 
-// Like or unlike a post
 router.post("/:id/like", async (req, res) => {
   const { username } = req.body;
 
@@ -63,7 +58,6 @@ router.post("/:id/like", async (req, res) => {
   }
 });
 
-// DELETE a post with PIN
 router.delete('/:id', async (req, res) => {
   const { pin } = req.body;
 
