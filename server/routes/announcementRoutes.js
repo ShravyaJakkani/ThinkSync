@@ -7,7 +7,6 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Get all announcements
 router.get("/", async (req, res) => {
   try {
     const posts = await AnnouncementPost.find().sort({ createdAt: -1 });
@@ -17,7 +16,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Create announcement
 router.post("/", upload.single("image"), async (req, res) => {
   const { title, content, pin } = req.body;
   let imageUrl = "";
@@ -46,7 +44,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// Delete announcement
+
 router.delete("/:id", async (req, res) => {
   try {
     const post = await AnnouncementPost.findById(req.params.id);
