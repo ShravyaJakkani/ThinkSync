@@ -21,9 +21,6 @@ import AnnouncementPostForm from './pages/AnnouncementPostForm';
 import AchievementForm from './pages/AchievementForm';
 import OpportunityForm from './pages/OpportunityForm';
 
-
-
-
 const categories = [
   { name: "Innovation", path: "/innovation" },
   { name: "Poetry", path: "/poetry" },
@@ -57,17 +54,7 @@ function Home() {
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem("username"));
 
-  // useEffect(() => {
-  //   if (!loggedInUser) {
-  //     const name = prompt("Enter your name to continue:");
-  //     localStorage.setItem("username", name || "guest");
-  //     setLoggedInUser(name || "guest");
-  //   }
-  // }, [loggedInUser]);
-
   return (
-    
-    // <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/innovation" element={<Innovation />} />
@@ -87,8 +74,6 @@ function App() {
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/opportunityform" element={<OpportunityForm />} />
       </Routes>
-    // </Router>
-    
   );
 }
 
