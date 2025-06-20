@@ -4,7 +4,7 @@ const multer = require('multer');
 const InnovationPost = require('../models/InnovationPost');
 
 const { storage } = require('../config/cloudinary');
-const upload = multer({ storage }); // Multer using Cloudinary
+const upload = multer({ storage }); 
 
 router.get('/', async (req, res) => {
   try {
