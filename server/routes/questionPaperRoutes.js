@@ -4,9 +4,8 @@ const { cloudinary } = require("../config/cloudinary");
 const  QuestionPaper  = require("../models/QuestionPaper");
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() }); // Store PDF in memory
+const upload = multer({ storage: multer.memoryStorage() }); 
 
-// Helper function to upload PDFs to Cloudinary as raw files
 const streamUpload = (buffer, filename) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -24,7 +23,6 @@ const streamUpload = (buffer, filename) => {
   });
 };
 
-// Get all question papers
 router.get("/", async (req, res) => {
   try {
     const papers = await QuestionPaper.find().sort({ createdAt: -1 });
@@ -34,7 +32,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Upload a question paper (PDF)
 router.post("/", upload.single("image"), async (req, res) => {
   const { title, pin } = req.body;
 
@@ -64,7 +61,6 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// Delete a question paper by ID and PIN
 router.delete('/:id', async (req, res) => {
   const { pin } = req.body;
 
