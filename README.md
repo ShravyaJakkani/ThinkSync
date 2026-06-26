@@ -18,7 +18,7 @@ A full-stack content-sharing platform for students to share innovations, poetry,
 - Cloudinary
 
 ## Live Demo
-[https://your-live-demo-link](https://thinksync-frontend.onrender.com/)
+[ThinkSync Demo](https://thinksync-frontend.onrender.com/)
 
 ## GitHub
 [https://github.com/shravyajakkani/ThinkSync](https://github.com/ShravyaJakkani/ThinkSync.git)
