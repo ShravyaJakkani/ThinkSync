@@ -11,7 +11,7 @@ export default function Login() {
     try {
       const res = await axios.post(
         // "https://thinksync-backend.onrender.com/api/auth/login",
-       "http://127.0.0.1:5050/api/auth/login",
+       "https://thinksync-backend.onrender.com/api/auth/login",
         form
       );
       console.log(res.data);
