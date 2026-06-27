@@ -50,7 +50,7 @@ useEffect(() => {
 
     const res = await axios.post(
       // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
-      `http://127.0.0.1:5050/api/innovation/${postId}/like`,
+      `https://thinksync-backend.onrender.com//${postId}/like`,
       {},
       {
         headers: {
