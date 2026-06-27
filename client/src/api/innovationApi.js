@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const API_URL = 'https://thinksync-backend.onrender.com/api/innovation';
-const API_URL='http://127.0.0.1:5050/api/innovation';
+const API_URL='https://thinksync-backend.onrender.com/api/innovation';
 
 export const fetchInnovationPosts = async () => {
   try {
