@@ -5,8 +5,8 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-// const PORT = process.env.PORT || 5050;
-const PORT=5050;
+const PORT = process.env.PORT || 5050;
+
 const allowedOrigins = [
   'http://localhost:5173',
   'https://thinksync-frontend.onrender.com'
