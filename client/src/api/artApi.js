@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const BASE_URL = 'https://thinksync-backend.onrender.com/api/art';
-const API_URL='http://127.0.0.1:5050/api/art';
+const API_URL='https://thinksync-backend.onrender.com/api/art';
 
 export const fetchArtPosts = async () => {
   const res = await axios.get(API_URL);
