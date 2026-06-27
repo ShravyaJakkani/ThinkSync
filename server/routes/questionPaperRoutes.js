@@ -12,7 +12,7 @@ const streamUpload = (buffer, filename) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         folder: "thinksync/questionpapers",
-        resource_type: "raw", // required for PDFs
+        resource_type: "raw", 
         public_id: filename.split(".")[0],
       },
       (error, result) => {
@@ -33,35 +33,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// router.post("/", upload.single("image"), async (req, res) => {
-//   const { title, pin } = req.body;
-
-//   if (!title || !pin) {
-//     return res.status(400).json({ error: "Title and PIN are required" });
-//   }
-
-//   try {
-//     let fileUrl = "";
-
-//     if (req.file) {
-//       const result = await streamUpload(req.file.buffer, req.file.originalname);
-//       fileUrl = result.secure_url;
-//     }
-
-//     const newPaper = new QuestionPaper({
-//       title,
-//       image: fileUrl,
-//       pin,
-//     });
-
-//     await newPaper.save();
-//     res.status(201).json(newPaper);
-//   } catch (error) {
-//     console.error("PDF Upload Error:", error);
-//     res.status(500).json({ error: "Failed to upload question paper" });
-//   }
-// });
-
 
 router.post("/auth", authMiddleware, upload.single("file"), async (req, res) => {
   const { title, content, pin } = req.body;
@@ -73,7 +44,7 @@ router.post("/auth", authMiddleware, upload.single("file"), async (req, res) => 
         const stream = cloudinary.uploader.upload_stream(
           {
   folder: "thinksync/questionpapers",
-  resource_type: "raw"   // 🔥 REQUIRED FOR PDF
+  resource_type: "raw"   
 },
           (err, result) => {
             if (err) reject(err);
@@ -96,8 +67,8 @@ router.post("/auth", authMiddleware, upload.single("file"), async (req, res) => 
     res.status(201).json(newPost);
 
   } catch (err) {
-  console.error("FULL ERROR:", err); // 👈 ADD THIS
-  res.status(500).json({ error: err.message }); // 👈 SHOW REAL ERROR
+  console.error("FULL ERROR:", err); 
+  res.status(500).json({ error: err.message }); 
 }
 });
 
@@ -107,7 +78,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 
     if (!post) return res.status(404).json({ error: "Post not found" });
 
-    // 🔥 handle old posts (no user)
     if (!post.user) {
       return res.status(403).json({ error: "Post has no owner (old data)" });
     }
@@ -121,7 +91,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     res.json({ message: "Deleted successfully" });
 
   } catch (err) {
-    console.error("Delete error:", err); // 🔥 ADD THIS
+    console.error("Delete error:", err); 
     res.status(500).json({ error: "Delete failed" });
   }
 });

@@ -23,8 +23,8 @@ const Announcement = () => {
     if (!confirmDelete) return;
   
     try {
-      await deleteAnnouncementPost(id); // ✅ no pin
-      loadPosts(); // refresh posts
+      await deleteAnnouncementPost(id); 
+      loadPosts(); 
     } catch (err) {
       alert("Failed to delete post");
       console.error(err);

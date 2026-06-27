@@ -41,7 +41,6 @@ function Home() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // 🔐 If not logged in → redirect
   if (!token) {
     navigate("/login");
     return null;
@@ -56,14 +55,6 @@ function Home() {
   return (
     <div className="app-container">
       <h1 className="main-title">ThinkSync</h1>
-
-      {/* ✅ Logout button */}
-      {/* <button
-        onClick={handleLogout}
-        style={{ marginBottom: "20px" }}
-      >
-        Logout
-      </button> */}
 
       <div className="card-container">
         {categories.map(({ name, path }) => (

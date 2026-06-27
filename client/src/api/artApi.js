@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// const BASE_URL = 'https://thinksync-backend.onrender.com/api/art';
 const API_URL='https://thinksync-backend.onrender.com/api/art';
 
 export const fetchArtPosts = async () => {
@@ -12,11 +11,11 @@ export const createArtPost = async (formData) => {
   const token = localStorage.getItem("token");
 
   const response = await axios.post(
-    `${API_URL}/auth`,   // ✅ IMPORTANT CHANGE
+    `${API_URL}/auth`,  
     formData,
     {
       headers: {
-        Authorization: `Bearer ${token}`, // ✅ ADD THIS
+        Authorization: `Bearer ${token}`, 
       },
     }
   );

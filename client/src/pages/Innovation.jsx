@@ -12,32 +12,17 @@ const Innovation = () => {
     setPosts(data);
   }
   const location = useLocation();
-//    useEffect(() => {
-//   fetchInnovationPosts().then((data) => {
-//       if (Array.isArray(data)) {
-//         setPosts(data);
-//       } else if (data && typeof data === 'object') {
-//         const converted = Object.values(data); 
-//         setPosts(converted);
-//       } else {
-//         console.error("Invalid structure:", data);
-//       }
-//     })
-//     .catch((err) => {
-//       console.error("fetchInnovationPosts error:", err.message);
-//     });
-// }, [location.pathname]);
-useEffect(() => {
-  loadPosts();
-}, [location.pathname]);
+  useEffect(() => {
+    loadPosts();
+  }, [location.pathname]);
 
   const handleDelete = async (id) => {
          const confirmDelete = window.confirm("Are you sure you want to delete this post?");
          if (!confirmDelete) return;
        
          try {
-           await deleteInnovationPost(id); // ✅ no pin
-           loadPosts(); // refresh posts
+           await deleteInnovationPost(id); 
+           loadPosts(); 
          } catch (err) {
            alert("Failed to delete post");
            console.error(err);
@@ -49,7 +34,6 @@ useEffect(() => {
     const token = localStorage.getItem("token");
 
     const res = await axios.post(
-      // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
       `https://thinksync-backend.onrender.com/api/innovation/${postId}/like`,
       {},
       {
@@ -98,7 +82,6 @@ const currentUserId = localStorage.getItem("userId");
 
       <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
 
-      {/* ✅ Correct user display */}
       <p className="text-sm text-gray-600 mb-1">
         Posted by: <strong>{post.user?.username || "Unknown"}</strong>
       </p>
@@ -116,14 +99,12 @@ const currentUserId = localStorage.getItem("userId");
 
       <br />
 
-      {/* ✅ LIKE BUTTON */}
       <button onClick={() => handleLike(post._id)} className="like-button">
         ❤️ {isLiked ? "Unlike" : "Like"}
       </button>
 
       <p>{post.likes?.length || 0} like(s)</p>
 
-      {/* ✅ DELETE BUTTON */}
       {(post.user?._id || post.user) === currentUserId && (
         <button onClick={() => handleDelete(post._id)}>Delete</button>
       )}

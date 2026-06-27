@@ -19,8 +19,8 @@ const QuestionPapers = () => {
             if (!confirmDelete) return;
           
             try {
-              await deleteQuestionPaper(id); // ✅ no pin
-              loadPapers(); // refresh posts
+              await deleteQuestionPaper(id); 
+              loadPapers(); 
             } catch (err) {
               alert("Failed to delete post");
               console.error(err);

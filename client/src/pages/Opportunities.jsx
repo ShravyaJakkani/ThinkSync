@@ -24,8 +24,8 @@ const Opportunities = () => {
           if (!confirmDelete) return;
         
           try {
-            await deleteOpportunityPost(id); // ✅ no pin
-            loadPosts(); // refresh posts
+            await deleteOpportunityPost(id); 
+            loadPosts(); 
           } catch (err) {
             alert("Failed to delete post");
             console.error(err);

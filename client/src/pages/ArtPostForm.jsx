@@ -9,7 +9,6 @@ const ArtPostForm = () => {
     title: "",
     userId: "",
     image: null,
-    // pin: "",
   });
 
   const handleChange = (e) => {
@@ -26,28 +25,6 @@ const ArtPostForm = () => {
       }));
     }
   };
-  
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const data = new FormData();
-  //   data.append("title", formData.title);
-  //   data.append("userId",formData.userId);
-  //   data.append("pin", formData.pin);
-  //   data.append("image", formData.image); 
-  
-  //   try {
-  //     const res = await axios.post("https://thinksync-backend.onrender.com/api/art", data);
-  //     if (res.status === 201) {
-  //       alert("Post created successfully");
-  //       navigate("/art",{replace:true}); 
-  //     }
-  //   } catch (err) {
-      
-  //   console.error("Upload error:", err.response?.data || err.message);
-  //     alert("Failed to post");
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
       e.preventDefault();
@@ -75,7 +52,6 @@ const ArtPostForm = () => {
           title: "",
           content: "",
           image: null,
-          // pin: "",
         });
     
         navigate("/art", { replace: true });
@@ -105,19 +81,6 @@ const ArtPostForm = () => {
           />
         </td>
       </tr>
-      {/* <tr>
-        <td className="p-2 font-semibold">Author:</td>
-        <td className="p-2">
-          <input
-            type="text"
-            name="userId"
-            placeholder="Author"
-            onChange={handleChange}
-            required
-            className="border p-2 w-full"
-          />
-        </td>
-      </tr> */}
       <tr>
         <td className="p-2 font-semibold">Image:</td>
         <td className="p-2">
@@ -129,19 +92,6 @@ const ArtPostForm = () => {
           />
         </td>
       </tr>
-      {/* <tr>
-        <td className="p-2 font-semibold">Secret PIN:</td>
-        <td className="p-2">
-          <input
-            type="password"
-            name="pin"
-            placeholder="Secret PIN for deletion"
-            onChange={handleChange}
-            required
-            className="border p-2 w-full"
-          />
-        </td>
-      </tr> */}
       <tr>
         <td colSpan={2} className="p-2 text-center">
           <button

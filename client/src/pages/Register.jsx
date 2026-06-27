@@ -11,7 +11,6 @@ export default function Register() {
   const handleRegister = async () => {
     try {
       await axios.post(
-        // "https://thinksync-backend.onrender.com/api/auth/register",
         "https://thinksync-backend.onrender.com/api/auth/register",
         form
       );
@@ -47,7 +46,6 @@ export default function Register() {
 
         <button onClick={handleRegister}>Register</button>
 
-        {/* 🔗 LOGIN LINK */}
         <p style={{ marginTop: "10px" }}>
           Already have an account? <a href="/login">Login</a>
         </p>

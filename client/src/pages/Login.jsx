@@ -1,8 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 
-
-
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
 
@@ -10,7 +8,6 @@ export default function Login() {
   console.log("login");
     try {
       const res = await axios.post(
-        // "https://thinksync-backend.onrender.com/api/auth/login",
        "https://thinksync-backend.onrender.com/api/auth/login",
         form
       );

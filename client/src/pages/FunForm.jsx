@@ -29,7 +29,6 @@ const FunForm = () => {
         const data = new FormData();
         data.append("title", formData.title);
         data.append("content", formData.content);
-        // data.append("pin", formData.pin);
         data.append("image", formData.image);
       
         try {
@@ -41,7 +40,6 @@ const FunForm = () => {
             title: "",
             content: "",
             image: null,
-            // pin: "",
           });
       
           navigate("/fun", { replace: true });
@@ -82,35 +80,20 @@ const FunForm = () => {
           />
         </td>
       </tr>
-      {/* <tr className="border">
-        <td className="p-2 font-semibold">Secret PIN</td>
-        <td className="p-2">
-          <input
-            type="password"
-            name="pin"
-            placeholder="Secret PIN"
-            required
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
+      <tr>
+        <td>
+          <button
+          type="submit"
+          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Upload
+        </button>
         </td>
-      </tr>
-     */}
-  
-<tr>
-  <td>
-    <button
-    type="submit"
-    className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-  >
-    Upload
-  </button>
-  </td>
 
-</tr>
-  </tbody>
-  </table>
-</form>
+      </tr>
+        </tbody>
+        </table>
+      </form>
 
   );
 };

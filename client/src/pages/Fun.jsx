@@ -21,8 +21,8 @@ const Fun = () => {
        if (!confirmDelete) return;
      
        try {
-         await deleteFunPost(id); // ✅ no pin
-         loadPosts(); // refresh posts
+         await deleteFunPost(id); 
+         loadPosts(); 
        } catch (err) {
          alert("Failed to delete post");
          console.error(err);
@@ -34,7 +34,6 @@ const Fun = () => {
     const token = localStorage.getItem("token");
 
     const res = await axios.post(
-      // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
       `https://thinksync-backend.onrender.com/api/fun/${postId}/like`,
       {},
       {
@@ -82,14 +81,12 @@ const Fun = () => {
 
       <p dangerouslySetInnerHTML={{ __html: marked(post.title) }}></p>
 
-      {/* ✅ LIKE BUTTON */}
       <button onClick={() => handleLike(post._id)} className="like-button">
         ❤️ {isLiked ? "Unlike" : "Like"}
       </button>
 
       <p>{post.likes?.length || 0} like(s)</p>
 
-      {/* ✅ DELETE BUTTON */}
       {(post.user?._id || post.user) === currentUserId && (
         <button onClick={() => handleDelete(post._id)}>Delete</button>
       )}

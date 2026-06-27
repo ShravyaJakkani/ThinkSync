@@ -9,7 +9,6 @@ const AnnouncementPostForm = () => {
     title: "",
     content: "",
     image: null,
-    // pin: "",
   });
 
   const handleChange = (e) => {
@@ -42,7 +41,6 @@ const AnnouncementPostForm = () => {
     const data = new FormData();
     data.append("title", formData.title);
     data.append("content", formData.content);
-    // data.append("pin", formData.pin);
     data.append("image", formData.image);
   
     try {
@@ -54,7 +52,6 @@ const AnnouncementPostForm = () => {
         title: "",
         content: "",
         image: null,
-        // pin: "",
       });
   
       navigate("/announcement", { replace: true });
@@ -108,19 +105,7 @@ const AnnouncementPostForm = () => {
           />
         </td>
       </tr>
-      {/* <tr>
-        <td className="p-2 font-semibold">Secret PIN:</td>
-        <td className="p-2">
-          <input
-            type="password"
-            name="pin"
-            placeholder="Secret PIN for deletion"
-            onChange={handleChange}
-            required
-            className="border p-2 w-full"
-          />
-        </td>
-      </tr> */}
+     
       <tr>
         <td colSpan={2} className="p-2 text-center">
           <button

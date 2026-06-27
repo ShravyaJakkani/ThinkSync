@@ -36,7 +36,6 @@ const handleLike = async (postId) => {
     const token = localStorage.getItem("token");
 
     const res = await axios.post(
-      // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
       `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
       {},
       {
@@ -74,33 +73,6 @@ const currentUserId = localStorage.getItem("userId");
         {posts.length === 0 ? (
           <p className="text-center text-gray-500">No posts yet.</p>
         ) : (
-//           posts.map((post, index) => (
-//             <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
-//               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-//                <p className="mb-2">{post.content}</p>
-//               {post.image && (
-//                 <img
-//                   src={post.image}
-//                   style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
-//                 />
-//               )}
-//               <br></br>
-              
-//                 <div key={post._id}>
-//       <button onClick={() => handleLike(post._id)}>
-//         ❤️ {isLiked ? "Unlike" : "Like"}
-//       </button>
-//     </div>
-//                 <p>{post.likes?.length || 0} like(s)</p>
-//               {(post.user?._id || post.user) === localStorage.getItem("userId") && (
-//   <button onClick={() => handleDelete(post._id)}>Delete</button>
-// )}
-//               <hr></hr>
-//             </div>
-//           )
-          
-//         )
-//         )
             posts.map((post) => {
   const isLiked = post.likes?.some(
     (id) => id === currentUserId || id?._id === currentUserId

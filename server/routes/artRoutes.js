@@ -70,7 +70,7 @@ router.post("/auth", authMiddleware, upload.single("image"), async (req, res) =>
       content,
       pin,
       image: imageUrl,
-      user: req.user.id, // 🔥 important
+      user: req.user.id, 
       likes: []
     });
 
@@ -123,7 +123,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 
     if (!post) return res.status(404).json({ error: "Post not found" });
 
-    // 🔥 handle old posts (no user)
     if (!post.user) {
       return res.status(403).json({ error: "Post has no owner (old data)" });
     }
@@ -137,7 +136,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     res.json({ message: "Deleted successfully" });
 
   } catch (err) {
-    console.error("Delete error:", err); // 🔥 ADD THIS
+    console.error("Delete error:", err); 
     res.status(500).json({ error: "Delete failed" });
   }
 });

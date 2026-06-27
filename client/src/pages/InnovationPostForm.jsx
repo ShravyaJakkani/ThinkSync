@@ -9,7 +9,6 @@ const InnovationPostForm = () => {
     content: "",
     userId: "",
     image: null,
-    // pin: "",
   });
 
   const handleChange = (e) => {
@@ -34,7 +33,6 @@ const InnovationPostForm = () => {
           const data = new FormData();
           data.append("title", formData.title);
           data.append("content", formData.content);
-          // data.append("pin", formData.pin);
           data.append("image", formData.image);
         
           try {
@@ -46,7 +44,6 @@ const InnovationPostForm = () => {
               title: "",
               content: "",
               image: null,
-              // pin: "",
             });
         
             navigate("/innovation", { replace: true });
@@ -75,19 +72,6 @@ const InnovationPostForm = () => {
               />
             </td>
           </tr>
-          {/* <tr>
-            <td className="p-2 font-semibold">Author:</td>
-            <td className="p-2">
-              <input
-                type="text"
-                name="userId"
-                placeholder="Author"
-                onChange={handleChange}
-                required
-                className="border p-2 w-full"
-              />
-            </td>
-          </tr>*/}
           <tr> 
             <td className="p-2 font-semibold align-top">Content:</td>
             <td className="p-2">
@@ -113,19 +97,6 @@ const InnovationPostForm = () => {
               />
             </td>
           </tr>
-          {/* <tr>
-            <td className="p-2 font-semibold">Secret PIN:</td>
-            <td className="p-2">
-              <input
-                type="password"
-                name="pin"
-                placeholder="Secret PIN for deletion"
-                onChange={handleChange}
-                required
-                className="border p-2 w-full"
-              />
-            </td>
-          </tr> */}
           <tr>
             <td colSpan={2} className="p-2 text-center">
               <button

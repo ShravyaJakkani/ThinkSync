@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// const API_URL = "https://thinksync-backend.onrender.com/api/questionpapers";
 const API_URL='https://thinksync-backend.onrender.com/api/questionpapers';
 
 export const fetchQuestionPapers = async () => {
@@ -13,7 +12,7 @@ export const uploadQuestionPaper = async (formData) => {
 
   const res = await axios.post(
     `${API_URL}/auth`,
-    formData, // ✅ directly send
+    formData,
     {
       headers: {
         Authorization: `Bearer ${token}`,

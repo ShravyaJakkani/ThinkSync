@@ -7,7 +7,6 @@ module.exports = function (req, res, next) {
     return res.status(401).json({ message: "No token, access denied" });
   }
 
-  // ✅ Handle Bearer format
   if (token.startsWith("Bearer ")) {
     token = token.split(" ")[1];
   }

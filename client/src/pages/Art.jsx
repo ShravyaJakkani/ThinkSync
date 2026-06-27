@@ -23,8 +23,8 @@ const Art = () => {
       if (!confirmDelete) return;
     
       try {
-        await deleteArtPost(id); // ✅ no pin
-        loadPosts(); // refresh posts
+        await deleteArtPost(id); 
+        loadPosts(); 
       } catch (err) {
         alert("Failed to delete post");
         console.error(err);
@@ -35,7 +35,6 @@ const handleLike = async (postId) => {
     const token = localStorage.getItem("token");
 
     const res = await axios.post(
-      // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
       `https://thinksync-backend.onrender.com/api/art/${postId}/like`,
       {},
       {

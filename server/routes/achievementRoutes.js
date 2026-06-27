@@ -11,7 +11,7 @@ const upload = multer({ storage });
 router.get("/", async (req, res) => {
   try {
     const posts = await AchievementPost.find()
-  .populate("user", "username") // 🔥 THIS LINE
+  .populate("user", "username") 
   .sort({ createdAt: -1 });
     res.json(posts);
   } catch (err) {
@@ -71,7 +71,7 @@ router.post("/auth", authMiddleware, upload.single("image"), async (req, res) =>
       content,
       pin,
       image: imageUrl,
-      user: req.user.id, // 🔥 important
+      user: req.user.id, 
       likes: []
     });
 
@@ -99,12 +99,12 @@ router.post("/:id/like", authMiddleware, async (req, res) => {
     );
 
     if (alreadyLiked) {
-      // UNLIKE
+      
       post.likes = post.likes.filter(
         (id) => id.toString() !== userId
       );
     } else {
-      // LIKE
+      
       post.likes.push(userId);
     }
 
@@ -124,7 +124,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 
     if (!post) return res.status(404).json({ error: "Post not found" });
 
-    // 🔥 handle old posts (no user)
     if (!post.user) {
       return res.status(403).json({ error: "Post has no owner (old data)" });
     }
@@ -138,7 +137,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     res.json({ message: "Deleted successfully" });
 
   } catch (err) {
-    console.error("Delete error:", err); // 🔥 ADD THIS
+    console.error("Delete error:", err);
     res.status(500).json({ error: "Delete failed" });
   }
 });

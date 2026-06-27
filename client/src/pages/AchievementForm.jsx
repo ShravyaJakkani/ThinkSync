@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { createAchievementPost } from "../api/achievementApi";
 import { useNavigate } from "react-router-dom";
-// import axios from 'axios';
 
 const AchievementForm = () => {
   const navigate = useNavigate();
@@ -9,7 +8,6 @@ const AchievementForm = () => {
   title: "",
   content: "",
   image: null,
-  // pin: "",
 });
 
   const handleChange = (e) => {
@@ -28,7 +26,6 @@ const AchievementForm = () => {
   };
   
 
-  // ❌ remove axios import
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -56,7 +53,7 @@ const handleSubmit = async (e) => {
       title: "",
       content: "",
       image: null,
-      // pin: "",
+     
     });
 
     navigate("/achievements", { replace: true });
@@ -86,19 +83,6 @@ const handleSubmit = async (e) => {
           />
         </td>
       </tr>
-      {/* <tr>
-        <td className="p-2 font-semibold">Author:</td>
-        <td className="p-2">
-          <input
-            type="text"
-            name="userId"
-            placeholder="Author"
-            onChange={handleChange}
-            required
-            className="border p-2 w-full"
-          />
-        </td>
-      </tr> */}
       <tr>
         <td className="p-2 font-semibold align-top">Content:</td>
         <td className="p-2">
@@ -123,25 +107,11 @@ const handleSubmit = async (e) => {
           />
         </td>
       </tr>
-      {/* <tr>
-        <td className="p-2 font-semibold">Secret PIN:</td>
-        <td className="p-2">
-          <input
-            type="password"
-            name="pin"
-            placeholder="Secret PIN for deletion"
-            onChange={handleChange}
-            required
-            className="border p-2 w-full"
-          />
-        </td>
-      </tr> */}
       <tr>
         <td colSpan={2} className="p-2 text-center">
           <button
             type="submit"
-            className="bg-green-600 text-white px-4 py-2 rounded"
-          >
+            className="bg-green-600 text-white px-4 py-2 rounded">
             Submit Post
           </button>
         </td>
