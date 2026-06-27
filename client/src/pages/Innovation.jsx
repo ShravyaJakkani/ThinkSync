@@ -50,7 +50,7 @@ useEffect(() => {
 
     const res = await axios.post(
       // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
-      `https://thinksync-backend.onrender.com//${postId}/like`,
+      `https://thinksync-backend.onrender.com/api/innovation/${postId}/like`,
       {},
       {
         headers: {
