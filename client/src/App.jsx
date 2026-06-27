@@ -13,6 +13,9 @@ import Opportunities from './pages/Opportunities';
 import InnovationPostForm from './pages/InnovationPostForm';
 import PoetryPostForm from './pages/PoetryPostForm';
 import QuestionPapersForm from './pages/QuestionPapersForm';
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Navbar from "./components/Navbar";
 
 import './App.css';
 
@@ -32,15 +35,38 @@ const categories = [
   { name: "Opportunities", path: "/opportunities" },
 ];
 
+import { useNavigate } from "react-router-dom";
+
 function Home() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  // 🔐 If not logged in → redirect
+  if (!token) {
+    navigate("/login");
+    return null;
+  }
+  navigate("/login");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <div className="app-container">
       <h1 className="main-title">ThinkSync</h1>
 
-      <br></br>
+      {/* ✅ Logout button */}
+      {/* <button
+        onClick={handleLogout}
+        style={{ marginBottom: "20px" }}
+      >
+        Logout
+      </button> */}
+
       <div className="card-container">
         {categories.map(({ name, path }) => (
-          
           <Link key={name} to={path} className="card">
             <h2>{name}</h2>
             <p>Explore posts related to {name.toLowerCase()}.</p>
@@ -52,11 +78,22 @@ function Home() {
 }
 
 function App() {
+  const token = localStorage.getItem("token");
   const [loggedInUser, setLoggedInUser] = useState(localStorage.getItem("username"));
 
   return (
+    <>
+     {token && <Navbar />} 
+     
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+            path="/"
+            element={
+            localStorage.getItem("token") ? <Home /> : <Login />
+            }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/innovation" element={<Innovation />} />
         <Route path="/innovation/post" element={<InnovationPostForm />} />
         <Route path="/poetry" element={<Poetry />} />
@@ -74,6 +111,7 @@ function App() {
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/opportunityform" element={<OpportunityForm />} />
       </Routes>
+      </>
   );
 }
 

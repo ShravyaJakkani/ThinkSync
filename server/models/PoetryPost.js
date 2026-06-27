@@ -1,15 +1,24 @@
 const mongoose = require('mongoose');
 
-const PoetryPostSchema = new mongoose.Schema({
-  title: String,
-  userId: String,
-  pin: String,
-  image: String,
-  likes: [String],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+const poetryPostSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  image: { type: String },
+  // pin: { type: String, required: true },
 
-module.exports = mongoose.model('PoetryPost', PoetryPostSchema);
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
+
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: false // allows old posts to still work
+  }
+
+}, { timestamps: true });
+
+module.exports = mongoose.model('PoetryPost', poetryPostSchema);

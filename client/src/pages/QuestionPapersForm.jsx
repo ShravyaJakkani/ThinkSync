@@ -4,35 +4,53 @@ import { uploadQuestionPaper } from "../api/questionPapersApi";
 import { useNavigate } from "react-router-dom";
 
 const QuestionPaperForm = () => {
-  const [formData, setFormData] = useState({ title:"",image: null, pin: "" });
+  const [formData, setFormData] = useState({ title:"",file: null });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData({ ...formData, image: files[0] });
+    if (name === "file") {
+      setFormData({ ...formData, file: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-     const Data = new FormData();
-    Data.append("title",formData.title)
-    Data.append("image", formData.image); 
-    Data.append("pin", formData.pin);
-  
-    try {
-      await axios.post("https://thinksync-backend.onrender.com/api/questionpapers", Data);
-      alert("Uploaded successfully!");
-      navigate("/questionpapers",{replace:true});
-    } catch (err) {
-      console.error("Upload error:", err);
-      alert("Upload failed");
-    }
-  };
-  
+   const handleSubmit = async (e) => {
+                e.preventDefault();
+              
+                const token = localStorage.getItem("token");
+              
+                if (!token) {
+                  alert("Please login first");
+                  navigate("/login");
+                  return;
+                }
+              
+                const data = new FormData();
+                data.append("title", formData.title);
+                // data.append("content", formData.content);
+                // data.append("pin", formData.pin);
+                data.append("file", formData.file);
+              
+                try {
+                  await uploadQuestionPaper(data);
+              
+                  alert("Post created successfully");
+              
+                  setFormData({
+                    title: "",
+                    file: null,
+                    // pin: "",
+                  });
+              
+                  navigate("/questionpapers", { replace: true });
+              
+                } catch (err) {
+                  console.error("Upload error:", err.response?.data || err.message);
+                  alert("Failed to post");
+                }
+              };
 
   return (
     <form onSubmit={handleSubmit} className="p-6 space-y-4" id="frm">
@@ -57,14 +75,14 @@ const QuestionPaperForm = () => {
         <td className="p-2">
           <input
             type="file"
-            name="image"
+            name="file"
             required
             onChange={handleChange}
             className="w-full"
           />
         </td>
       </tr>
-      <tr>
+      {/* <tr>
         <td className="p-2 font-semibold">Secret PIN:</td>
         <td className="p-2">
           <input
@@ -76,7 +94,7 @@ const QuestionPaperForm = () => {
             className="border p-2 w-full"
           />
         </td>
-      </tr>
+      </tr> */}
       <tr>
         <td colSpan={2} className="p-2 text-center">
           <button

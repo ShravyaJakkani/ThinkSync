@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const API_URL = 'https://thinksync-backend.onrender.com/api/innovation';
+// const API_URL = 'https://thinksync-backend.onrender.com/api/innovation';
+const API_URL='http://127.0.0.1:5050/api/innovation';
 
 export const fetchInnovationPosts = async () => {
   try {
-    const response = await axios.get("https://thinksync-backend.onrender.com/api/innovation");
+    const response = await axios.get(API_URL);
     return response.data;
   } catch (error) {
     console.error("Error in fetchInnovationPosts:", error.message);
@@ -12,14 +13,25 @@ export const fetchInnovationPosts = async () => {
   }
 };
 
-export const createInnovationPost = async (postData) => {
-  const response = await axios.post(API_URL, postData); 
+export const createInnovationPost = async (formData) => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.post(
+    `${API_URL}/auth`,   // ✅ IMPORTANT CHANGE
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // ✅ ADD THIS
+      },
+    }
+  );
+
   return response.data;
 };
-
-export const deleteInnovationPost = async (id, pin) => {
-  const response = await axios.delete(`${API_URL}/${id}`, {
-    data: { pin },
+export const deleteInnovationPost = async (id) => {
+  return axios.delete(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
   });
-  return response.data;
 };

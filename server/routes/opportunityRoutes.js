@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const OpportunityPost = require("../models/OpportunityPost");
+const authMiddleware = require("../middleware/authMiddleware");
 const { cloudinary } = require("../config/cloudinary");
 
 const router = express.Router();
@@ -44,22 +45,65 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.post("/auth", authMiddleware, upload.single("image"), async (req, res) => {
+  const { title, content, pin } = req.body;
+  let imageUrl = "";
+
   try {
-    const post = await OpportunityPost.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: "Post not found" });
-
-    const inputPin = req.body.pin;
-    const adminPin = process.env.ADMIN_PIN;
-
-    if (post.pin !== inputPin && inputPin !== adminPin) {
-      return res.status(403).json({ error: "Invalid PIN" });
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "thinksync/opportunity" },
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      imageUrl = result.secure_url;
     }
 
-    await OpportunityPost.findByIdAndDelete(req.params.id);
-    res.json({ message: "Opportunity deleted" });
+    const newPost = new OpportunityPost({
+      title,
+      content,
+      pin,
+      image: imageUrl,
+      user: req.user.id, // 🔥 important
+      likes: []
+    });
+
+    await newPost.save();
+    res.status(201).json(newPost);
+
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete opportunity" });
+    console.error("Opportunity post error:", err);
+    res.status(500).json({ error: "Failed to create opportunity posts" });
+  }
+});
+
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    const post = await OpportunityPost.findById(req.params.id);
+
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    // 🔥 handle old posts (no user)
+    if (!post.user) {
+      return res.status(403).json({ error: "Post has no owner (old data)" });
+    }
+
+    if (post.user.toString() !== req.user.id) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
+
+    await post.deleteOne();
+
+    res.json({ message: "Deleted successfully" });
+
+  } catch (err) {
+    console.error("Delete error:", err); // 🔥 ADD THIS
+    res.status(500).json({ error: "Delete failed" });
   }
 });
 

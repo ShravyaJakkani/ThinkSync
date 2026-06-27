@@ -9,7 +9,7 @@ const AnnouncementPostForm = () => {
     title: "",
     content: "",
     image: null,
-    pin: "",
+    // pin: "",
   });
 
   const handleChange = (e) => {
@@ -30,21 +30,37 @@ const AnnouncementPostForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      alert("Please login first");
+      navigate("/login");
+      return;
+    }
+  
     const data = new FormData();
     data.append("title", formData.title);
     data.append("content", formData.content);
-    data.append("pin", formData.pin);
-    data.append("image", formData.image); 
+    // data.append("pin", formData.pin);
+    data.append("image", formData.image);
   
     try {
-      const res = await axios.post("https://thinksync-backend.onrender.com/api/announcement", data);
-      if (res.status === 201) {
-        alert("Post created successfully");
-        navigate("/announcement",{replace:true}); 
-      }
+      await createAnnouncementPost(data);
+  
+      alert("Post created successfully");
+  
+      setFormData({
+        title: "",
+        content: "",
+        image: null,
+        // pin: "",
+      });
+  
+      navigate("/announcement", { replace: true });
+  
     } catch (err) {
-      
-    console.error("Upload error:", err.response?.data || err.message);
+      console.error("Upload error:", err.response?.data || err.message);
       alert("Failed to post");
     }
   };
@@ -92,7 +108,7 @@ const AnnouncementPostForm = () => {
           />
         </td>
       </tr>
-      <tr>
+      {/* <tr>
         <td className="p-2 font-semibold">Secret PIN:</td>
         <td className="p-2">
           <input
@@ -104,7 +120,7 @@ const AnnouncementPostForm = () => {
             className="border p-2 w-full"
           />
         </td>
-      </tr>
+      </tr> */}
       <tr>
         <td colSpan={2} className="p-2 text-center">
           <button

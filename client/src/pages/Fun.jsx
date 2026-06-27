@@ -16,34 +16,45 @@ const Fun = () => {
     loadPosts();
   }, []);
 
-  const handleDelete = async (id) => {
-    const pin = prompt("Enter PIN to delete:");
-    if (!pin) return;
-    try {
-      await deleteFunPost(id, pin);
-      loadPosts();
-    } catch {
-      alert("Delete failed");
-    }
-  };
+ const handleDelete = async (id) => {
+       const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+       if (!confirmDelete) return;
+     
+       try {
+         await deleteFunPost(id); // ✅ no pin
+         loadPosts(); // refresh posts
+       } catch (err) {
+         alert("Failed to delete post");
+         console.error(err);
+       }
+     };
 
   const handleLike = async (postId) => {
-      const currentUser = localStorage.getItem("username") || "guest";
-      try {
-        const res = await axios.post(
-          `https://thinksync-backend.onrender.com/api/fun/${postId}/like`,
-          { username: currentUser }
-        );
-        setPosts((prev) =>
-          prev.map((post) =>
-            post._id === postId ? { ...post, likes: res.data.likes } : post
-          )
-        );
-      } catch (err) {
-        console.error("Like error:", err);
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
+      `http://127.0.0.1:5050/api/fun/${postId}/like`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    };
-  const currentUser = localStorage.getItem("username");
+    );
+
+    setPosts((prev) =>
+      prev.map((post) =>
+        post._id === postId ? { ...post, likes: res.data.likes } : post
+      )
+    );
+
+  } catch (err) {
+    console.error("Like error:", err.response?.data || err.message);
+  }
+};
+ const currentUserId = localStorage.getItem("userId");
 
   return (
     <div className="p-6" id="posts">
@@ -56,29 +67,38 @@ const Fun = () => {
       </Link>
       <hr></hr>
       <div className="grid grid-cols-2 gap-4">
-        {posts.map((post) => (
-          <div key={post._id} className="relative border rounded p-2">
-            
-            <img
-              src={post.image}
-              style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
-            />
-            <p dangerouslySetInnerHTML={{ __html: marked(post.title) }}></p>
-                <button
-                  onClick={() => handleLike(post._id)} className="like-button">
-                   ❤️ {post.likes?.includes(currentUser) ? "Unlike" : "Like"}
-                </button>
-              <p>{post.likes?.length || 0} like(s)</p>
-                 
-            <button
-              onClick={() => handleDelete(post._id)}
-              className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded"
-            >
-              Delete
-            </button>
-            <hr></hr>
-          </div>
-        ))}
+        {posts.map((post) => {
+  const isLiked = post.likes?.some(
+    (id) => id === currentUserId || id?._id === currentUserId
+  );
+
+  return (
+    <div key={post._id} className="relative border rounded p-2">
+
+      <img
+        src={post.image}
+        style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
+      />
+
+      <p dangerouslySetInnerHTML={{ __html: marked(post.title) }}></p>
+
+      {/* ✅ LIKE BUTTON */}
+      <button onClick={() => handleLike(post._id)} className="like-button">
+        ❤️ {isLiked ? "Unlike" : "Like"}
+      </button>
+
+      <p>{post.likes?.length || 0} like(s)</p>
+
+      {/* ✅ DELETE BUTTON */}
+      {(post.user?._id || post.user) === currentUserId && (
+        <button onClick={() => handleDelete(post._id)}>Delete</button>
+      )}
+
+      <hr />
+    </div>
+  );
+})}
+         
       </div>
     </div>
   );

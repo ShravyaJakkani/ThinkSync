@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://thinksync-backend.onrender.com/api/fun";
+// const API_URL = "https://thinksync-backend.onrender.com/api/fun";
+const API_URL='http://127.0.0.1:5050/api/fun';
 
 export const fetchFunPosts = async () => {
   const res = await axios.get(API_URL);
@@ -8,15 +9,25 @@ export const fetchFunPosts = async () => {
 };
 
 export const createFunPost = async (formData) => {
-  const data = new FormData();
-  data.append("title", formData.title);
-  data.append("image", formData.image);
-  data.append("pin", formData.pin);
+  const token = localStorage.getItem("token");
 
-  const res = await axios.post(API_URL, data);
-  return res.data;
+  const response = await axios.post(
+    `${API_URL}/auth`,   // ✅ IMPORTANT CHANGE
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // ✅ ADD THIS
+      },
+    }
+  );
+
+  return response.data;
 };
 
-export const deleteFunPost = async (id, pin) => {
-  await axios.delete(`${API_URL}/${id}`, { data: { pin } });
+export const deleteFunPost = async (id) => {
+  return axios.delete(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
 };

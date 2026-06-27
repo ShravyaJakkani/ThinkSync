@@ -5,8 +5,8 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
+// const PORT = process.env.PORT || 5050;
+const PORT=5050;
 const allowedOrigins = [
   'http://localhost:5173',
   'https://thinksync-frontend.onrender.com'
@@ -31,6 +31,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.get("/", (req, res) => {
   res.send("Backend running!");
 });
+
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", authRoutes);
 
 const innovationRoutes = require('./routes/innovationRoutes');
 app.use('/api/innovation', innovationRoutes);

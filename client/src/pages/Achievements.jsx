@@ -20,33 +20,44 @@ const Achievements = () => {
   };
 
   const handleDelete = async (id) => {
-    const pin = prompt("Enter your secret PIN to delete this post:");
-    if (!pin) return;
-    try {
-      await deleteAchievementPost(id, pin);
-      loadPosts(); // refresh posts
-    } catch (err) {
-      alert("Incorrect PIN or failed to delete.");
-    }
-  };
-const handleLike = async (postId) => {
-      const currentUser = localStorage.getItem("username") || "guest";
-      try {
-        const res = await axios.post(
-          `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
-          { username: currentUser }
-        );
-        setPosts((prev) =>
-          prev.map((post) =>
-            post._id === postId ? { ...post, likes: res.data.likes } : post
-          )
-        );
-      } catch (err) {
-        console.error("Like error:", err);
-      }
-    };
-  const currentUser = localStorage.getItem("username");
+  const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+  if (!confirmDelete) return;
 
+  try {
+    await deleteAchievementPost(id); // ✅ no pin
+    loadPosts(); // refresh posts
+  } catch (err) {
+    alert("Failed to delete post");
+    console.error(err);
+  }
+};
+const handleLike = async (postId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      // `https://thinksync-backend.onrender.com/api/achievement/${postId}/like`,
+      `http://127.0.0.1:5050/api/achievement/${postId}/like`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setPosts((prev) =>
+      prev.map((post) =>
+        post._id === postId ? { ...post, likes: res.data.likes } : post
+      )
+    );
+
+  } catch (err) {
+    console.error("Like error:", err.response?.data || err.message);
+  }
+};
+
+const currentUserId = localStorage.getItem("userId");
   return (
     <div className="p-6" id="posts">
       <h1 className="text-3xl font-bold mb-4 text-center">Achievement Posts</h1>
@@ -63,36 +74,68 @@ const handleLike = async (postId) => {
         {posts.length === 0 ? (
           <p className="text-center text-gray-500">No posts yet.</p>
         ) : (
-          posts.map((post, index) => (
-            <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
-              <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-               <p className="mb-2">{post.content}</p>
-              {post.image && (
-                <img
-                  src={post.image}
-                  style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
-                />
-              )}
-              <br></br>
+//           posts.map((post, index) => (
+//             <div key={index} className="bg-white p-4 rounded shadow relative border border-gray-200">
+//               <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+//                <p className="mb-2">{post.content}</p>
+//               {post.image && (
+//                 <img
+//                   src={post.image}
+//                   style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
+//                 />
+//               )}
+//               <br></br>
               
-                <button
-                  onClick={() => handleLike(post._id)}
-                   className="like-button"
-                   >
-                    ❤️ {post.likes?.includes(currentUser) ? "Unlike" : "Like"}
-                </button>
-                <p>{post.likes?.length || 0} like(s)</p>
-              <button
-                onClick={() => handleDelete(post._id)}
+//                 <div key={post._id}>
+//       <button onClick={() => handleLike(post._id)}>
+//         ❤️ {isLiked ? "Unlike" : "Like"}
+//       </button>
+//     </div>
+//                 <p>{post.likes?.length || 0} like(s)</p>
+//               {(post.user?._id || post.user) === localStorage.getItem("userId") && (
+//   <button onClick={() => handleDelete(post._id)}>Delete</button>
+// )}
+//               <hr></hr>
+//             </div>
+//           )
+          
+//         )
+//         )
+            posts.map((post) => {
+  const isLiked = post.likes?.some(
+    (id) => id === currentUserId || id?._id === currentUserId
+  );
 
-                className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-              <hr></hr>
-            </div>
-          ))
-        )}
+  return (
+    <div key={post._id} className="bg-white p-4 rounded shadow relative border border-gray-200">
+      
+      <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+      <p className="mb-2">{post.content}</p>
+
+      {post.image && (
+        <img
+          src={post.image}
+          style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'cover' }}
+        />
+      )}
+
+      <br />
+
+      <button onClick={() => handleLike(post._id)}>
+        ❤️ {isLiked ? "Unlike" : "Like"}
+      </button>
+
+      <p>{post.likes?.length || 0} like(s)</p>
+
+      {(post.user?._id || post.user) === currentUserId && (
+        <button onClick={() => handleDelete(post._id)}>Delete</button>
+      )}
+
+      <hr />
+    </div>
+  );
+}))
+        }
       </div>
     </div>
   );

@@ -1,12 +1,24 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const artSchema = new mongoose.Schema({
+const artPostSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  userId: { type: String, required: true },
-  image: { type: String, required: true },
-  pin: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-  likes: [String],
-});
+  content: { type: String, required: true },
+  image: { type: String },
+  // pin: { type: String, required: true },
 
-module.exports = mongoose.model("Art", artSchema);
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
+
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: false // allows old posts to still work
+  }
+
+}, { timestamps: true });
+
+module.exports = mongoose.model('Art', artPostSchema);

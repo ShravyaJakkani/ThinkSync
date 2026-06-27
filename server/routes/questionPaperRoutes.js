@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const authMiddleware= require("../middleware/authMiddleware");
 const { cloudinary } = require("../config/cloudinary");
 const  QuestionPaper  = require("../models/QuestionPaper");
 
@@ -32,52 +33,96 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", upload.single("image"), async (req, res) => {
-  const { title, pin } = req.body;
+// router.post("/", upload.single("image"), async (req, res) => {
+//   const { title, pin } = req.body;
 
-  if (!title || !pin) {
-    return res.status(400).json({ error: "Title and PIN are required" });
-  }
+//   if (!title || !pin) {
+//     return res.status(400).json({ error: "Title and PIN are required" });
+//   }
+
+//   try {
+//     let fileUrl = "";
+
+//     if (req.file) {
+//       const result = await streamUpload(req.file.buffer, req.file.originalname);
+//       fileUrl = result.secure_url;
+//     }
+
+//     const newPaper = new QuestionPaper({
+//       title,
+//       image: fileUrl,
+//       pin,
+//     });
+
+//     await newPaper.save();
+//     res.status(201).json(newPaper);
+//   } catch (error) {
+//     console.error("PDF Upload Error:", error);
+//     res.status(500).json({ error: "Failed to upload question paper" });
+//   }
+// });
+
+
+router.post("/auth", authMiddleware, upload.single("file"), async (req, res) => {
+  const { title, content, pin } = req.body;
+  let imageUrl = "";
 
   try {
-    let fileUrl = "";
-
     if (req.file) {
-      const result = await streamUpload(req.file.buffer, req.file.originalname);
-      fileUrl = result.secure_url;
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+  folder: "thinksync/questionpapers",
+  resource_type: "raw"   // 🔥 REQUIRED FOR PDF
+},
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      imageUrl = result.secure_url;
     }
 
-    const newPaper = new QuestionPaper({
-      title,
-      image: fileUrl,
-      pin,
-    });
-
-    await newPaper.save();
-    res.status(201).json(newPaper);
-  } catch (error) {
-    console.error("PDF Upload Error:", error);
-    res.status(500).json({ error: "Failed to upload question paper" });
-  }
+    const newPost = new QuestionPaper({
+          title,
+          file: imageUrl,   
+          user: req.user.id,
+          likes: []
 });
 
-router.delete('/:id', async (req, res) => {
-  const { pin } = req.body;
+    await newPost.save();
+    res.status(201).json(newPost);
 
-  if (!pin) return res.status(400).json({ error: 'PIN required for deletion' });
+  } catch (err) {
+  console.error("FULL ERROR:", err); // 👈 ADD THIS
+  res.status(500).json({ error: err.message }); // 👈 SHOW REAL ERROR
+}
+});
 
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const post = await QuestionPaper.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: 'Post not found' });
 
-    if (post.pin !== pin && pin !== process.env.ADMIN_PIN) {
-      return res.status(403).json({ error: 'Invalid PIN' });
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    // 🔥 handle old posts (no user)
+    if (!post.user) {
+      return res.status(403).json({ error: "Post has no owner (old data)" });
     }
 
-    await QuestionPaper.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Post deleted successfully' });
+    if (post.user.toString() !== req.user.id) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
+
+    await post.deleteOne();
+
+    res.json({ message: "Deleted successfully" });
+
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete post' });
+    console.error("Delete error:", err); // 🔥 ADD THIS
+    res.status(500).json({ error: "Delete failed" });
   }
 });
 

@@ -19,13 +19,15 @@ const Announcement = () => {
   };
 
   const handleDelete = async (id) => {
-    const pin = prompt("Enter your secret PIN to delete this post:");
-    if (!pin) return;
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (!confirmDelete) return;
+  
     try {
-      await deleteAnnouncementPost(id, pin);
+      await deleteAnnouncementPost(id); // ✅ no pin
       loadPosts(); // refresh posts
     } catch (err) {
-      alert("Incorrect PIN or failed to delete.");
+      alert("Failed to delete post");
+      console.error(err);
     }
   };
 
@@ -56,13 +58,9 @@ const Announcement = () => {
                 />
               )}
               <br></br>
-              <button
-                onClick={() => handleDelete(post._id)}
-
-                className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
+               {post.user === localStorage.getItem("userId") && (
+  <button onClick={() => handleDelete(post._id)}>Delete</button>
+)}
               <hr></hr>
             </div>
           ))

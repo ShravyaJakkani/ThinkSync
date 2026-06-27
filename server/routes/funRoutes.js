@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const Fun = require("../models/Fun");
+const authMiddleware = require("../middleware/authMiddleware");
 const { cloudinary } = require("../config/cloudinary");
 require("dotenv").config();
 
@@ -49,41 +50,99 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-router.post("/:id/like", async (req, res) => {
-  const { username } = req.body;
+router.post("/auth", authMiddleware, upload.single("image"), async (req, res) => {
+  const { title, content, pin } = req.body;
+  let imageUrl = "";
+
   try {
-    const post = await Fun.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: "Post not found" });
-
-    if (!username) return res.status(400).json({ error: "Username required" });
-
-    const alreadyLiked = post.likes.includes(username);
-    if (alreadyLiked) {
-      post.likes = post.likes.filter((u) => u !== username);
-    } else {
-      post.likes.push(username);
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "thinksync/fun" },
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      imageUrl = result.secure_url;
     }
 
-    await post.save();
-    res.json({ message: alreadyLiked ? "Unliked" : "Liked", likes: post.likes });
+    const newPost = new Fun({
+      title,
+      content,
+      // pin,
+      image: imageUrl,
+      user: req.user.id, // 🔥 important
+      likes: []
+    });
+
+    await newPost.save();
+    res.status(201).json(newPost);
+
   } catch (err) {
-    res.status(500).json({ error: "Failed to like/unlike post" });
+    console.error("Fun post error:", err);
+    res.status(500).json({ error: "Failed to create fun posts" });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.post("/:id/like", authMiddleware, async (req, res) => {
   try {
     const post = await Fun.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: "Post not found" });
 
-    if (post.pin !== req.body.pin && req.body.pin !== process.env.ADMIN_PIN) {
-      return res.status(403).json({ error: "Invalid PIN" });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
     }
 
-    await Fun.findByIdAndDelete(req.params.id);
-    res.json({ message: "Post deleted" });
+    const userId = req.user.id;
+
+    const alreadyLiked = post.likes.some(
+      (id) => id.toString() === userId
+    );
+
+    if (alreadyLiked) {
+      // UNLIKE
+      post.likes = post.likes.filter(
+        (id) => id.toString() !== userId
+      );
+    } else {
+      // LIKE
+      post.likes.push(userId);
+    }
+
+    await post.save();
+
+    res.json({ likes: post.likes });
+
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete fun post" });
+    console.error("Like error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    const post = await Fun.findById(req.params.id);
+
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    // 🔥 handle old posts (no user)
+    if (!post.user) {
+      return res.status(403).json({ error: "Post has no owner (old data)" });
+    }
+
+    if (post.user.toString() !== req.user.id) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
+
+    await post.deleteOne();
+
+    res.json({ message: "Deleted successfully" });
+
+  } catch (err) {
+    console.error("Delete error:", err); // 🔥 ADD THIS
+    res.status(500).json({ error: "Delete failed" });
   }
 });
 

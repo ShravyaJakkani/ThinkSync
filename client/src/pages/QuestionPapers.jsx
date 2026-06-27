@@ -14,16 +14,19 @@ const QuestionPapers = () => {
     loadPapers();
   }, []);
 
-  const handleDelete = async (id) => {
-    const pin = prompt("Enter PIN to delete:");
-    if (!pin) return;
-    try {
-      await deleteQuestionPaper(id, pin);
-      loadPapers();
-    } catch (err) {
-      alert("Delete failed");
-    }
-  };
+ const handleDelete = async (id) => {
+            const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+            if (!confirmDelete) return;
+          
+            try {
+              await deleteQuestionPaper(id); // ✅ no pin
+              loadPapers(); // refresh posts
+            } catch (err) {
+              alert("Failed to delete post");
+              console.error(err);
+            }
+          };
+ 
 
   return (
     <div className="p-6" id="posts">
@@ -40,19 +43,16 @@ const QuestionPapers = () => {
           <div key={paper._id} className="relative">
             <h3 className="text-xl font-semibold mb-2">Title:{paper.title}</h3>
             <a
-             href={paper.image}
+             href={paper.file}
              target="_blank"
              rel="noopener noreferrer"
              className="text-blue-600 underline">
              View PDF
             </a>
           <br></br>
-            <button
-              onClick={() => handleDelete(paper._id)}
-              className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded"
-            >
-              Delete
-            </button>
+            {(paper.user?._id || paper.user) === localStorage.getItem("userId") && (
+  <button onClick={() => handleDelete(paper._id)}>Delete</button>
+)}
             <hr></hr>
           </div>
         ))}

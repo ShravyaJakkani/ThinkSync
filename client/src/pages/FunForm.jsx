@@ -16,16 +16,41 @@ const FunForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await createFunPost(formData);
-      alert("Fun post uploaded!");
-      navigate("/fun");
-    } catch (err) {
-      console.error("Upload failed:", err);
-      alert("Upload failed");
-    }
-  };
+        e.preventDefault();
+      
+        const token = localStorage.getItem("token");
+      
+        if (!token) {
+          alert("Please login first");
+          navigate("/login");
+          return;
+        }
+      
+        const data = new FormData();
+        data.append("title", formData.title);
+        data.append("content", formData.content);
+        // data.append("pin", formData.pin);
+        data.append("image", formData.image);
+      
+        try {
+          await createFunPost(data);
+      
+          alert("Post created successfully");
+      
+          setFormData({
+            title: "",
+            content: "",
+            image: null,
+            // pin: "",
+          });
+      
+          navigate("/fun", { replace: true });
+      
+        } catch (err) {
+          console.error("Upload error:", err.response?.data || err.message);
+          alert("Failed to post");
+        }
+      };
 
   return (
     <form onSubmit={handleSubmit} className="p-6" id="frm">
@@ -57,7 +82,7 @@ const FunForm = () => {
           />
         </td>
       </tr>
-      <tr className="border">
+      {/* <tr className="border">
         <td className="p-2 font-semibold">Secret PIN</td>
         <td className="p-2">
           <input
@@ -70,15 +95,18 @@ const FunForm = () => {
           />
         </td>
       </tr>
-    
+     */}
   
 <tr>
-<button
+  <td>
+    <button
     type="submit"
     className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
   >
     Upload
   </button>
+  </td>
+
 </tr>
   </tbody>
   </table>
