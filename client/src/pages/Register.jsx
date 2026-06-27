@@ -12,7 +12,7 @@ export default function Register() {
     try {
       await axios.post(
         // "https://thinksync-backend.onrender.com/api/auth/register",
-        "http://127.0.0.1:5050/api/auth/register",
+        "https://thinksync-backend.onrender.com/api/auth/register",
         form
       );
 
