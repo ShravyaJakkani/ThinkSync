@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// const API_URL = 'https://thinksync-backend.onrender.com/api/announcement';
 const API_URL='https://thinksync-backend.onrender.com/api/announcement';
 
 export const fetchAnnouncementPosts = async () => {
@@ -12,11 +11,11 @@ export const createAnnouncementPost = async (formData) => {
   const token = localStorage.getItem("token");
 
   const response = await axios.post(
-    `${API_URL}/auth`,   // ✅ IMPORTANT CHANGE
+    `${API_URL}/auth`,   
     formData,
     {
       headers: {
-        Authorization: `Bearer ${token}`, // ✅ ADD THIS
+        Authorization: `Bearer ${token}`, 
       },
     }
   );
