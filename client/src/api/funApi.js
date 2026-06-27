@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const API_URL = "https://thinksync-backend.onrender.com/api/fun";
-const API_URL='http://127.0.0.1:5050/api/fun';
+const API_URL='https://thinksync-backend.onrender.com/api/fun';
 
 export const fetchFunPosts = async () => {
   const res = await axios.get(API_URL);
