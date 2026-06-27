@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const API_URL = 'https://thinksync-backend.onrender.com/api/opportunity';
-const API_URL='http://127.0.0.1:5050/api/opportunity';
+const API_URL='https://thinksync-backend.onrender.com/api/opportunity';
 
 export const fetchOpportunityPosts = async () => {
   const response = await axios.get(API_URL);
