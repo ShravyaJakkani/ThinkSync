@@ -14,9 +14,9 @@ A full-stack content-sharing platform for students to share innovations, poetry,
 
 ## Tech Stack
 
-**Frontend:** React, Vite, React Router, Axios
-**Backend:** Node.js, Express.js, JWT, bcrypt
-**Database:** MongoDB (Mongoose)
+**Frontend:** React, Vite, React Router, Axios\
+**Backend:** Node.js, Express.js, JWT, bcrypt\
+**Database:** MongoDB (Mongoose)\
 **File storage:** Cloudinary
 
 ## Live Demo
